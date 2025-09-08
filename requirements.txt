@@ -1,0 +1,51 @@
+# Eurovision Music Mixing Engine - Requirements
+# Core audio processing libraries
+librosa>=0.10.0
+soundfile>=0.12.0
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Audio manipulation and effects
+pydub>=0.25.0
+
+# Real-time audio and OSC control
+pyaudio>=0.2.14
+python-osc>=1.9.0
+
+# Scientific computing and data processing
+scikit-learn>=1.3.0
+joblib>=1.3.0
+
+# Numerical computation support
+numba>=0.58.0
+decorator>=4.4.0
+
+# Audio file reading support
+audioread>=3.0.0
+
+# Time stretching and pitch shifting
+soxr>=0.3.0
+
+# Caching and utilities
+pooch>=1.7.0
+lazy-loader>=0.3.0
+
+# Configuration and messaging
+msgpack>=1.0.0
+platformdirs>=4.0.0
+requests>=2.31.0
+
+# Threading and async support (built-in modules - listed for reference)
+# threading - built-in
+# queue - built-in
+# multiprocessing - built-in
+
+# Development and testing (optional)
+pytest>=7.0.0
+black>=23.0.0
+flake8>=6.0.0
+
+# Optional dependencies for extended functionality
+matplotlib>=3.7.0  # For visualizations
+ipython>=8.0.0     # For interactive development
+jupyter>=1.0.0     # For notebook development

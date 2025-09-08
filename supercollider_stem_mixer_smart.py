@@ -566,4 +566,5 @@ def main():
     mixer.start()
 
 if __name__ == "__main__":
+    print("Works with supercollider_audio_server_minimal.scd")
     main()
