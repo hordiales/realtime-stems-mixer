@@ -1,0 +1,337 @@
+{
+  "theme": "dramatic",
+  "base_song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+  "base_bpm": 125,
+  "base_key": "C",
+  "structure": [
+    "verse",
+    "verse",
+    "chorus",
+    "bridge",
+    "bridge",
+    "chorus",
+    "chorus"
+  ],
+  "sections": {
+    "00_verse": {
+      "type": "verse",
+      "stems": {
+        "bass": {
+          "song": "01-05 Run With U (Eurovision 2025 - Azerbaijan)",
+          "file": "../stems/01-05 Run With U (Eurovision 2025 - Azerbaijan)/bass.wav",
+          "bpm": 115,
+          "key": "G",
+          "pitch_shift": 1.0869565217391304,
+          "needs_timestretch": true
+        },
+        "drums": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/drums.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/other.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/piano.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-11 Espresso Macchiato (Eurovision 2025 - Estonia)",
+          "file": "../stems/01-11 Espresso Macchiato (Eurovision 2025 - Estonia)/vocals.wav",
+          "bpm": 120,
+          "key": "F",
+          "pitch_shift": 1.0416666666666667,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "01_verse": {
+      "type": "verse",
+      "stems": {
+        "bass": {
+          "song": "01-05 Run With U (Eurovision 2025 - Azerbaijan)",
+          "file": "../stems/01-05 Run With U (Eurovision 2025 - Azerbaijan)/bass.wav",
+          "bpm": 115,
+          "key": "G",
+          "pitch_shift": 1.0869565217391304,
+          "needs_timestretch": true
+        },
+        "drums": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/drums.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/other.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/piano.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-11 Espresso Macchiato (Eurovision 2025 - Estonia)",
+          "file": "../stems/01-11 Espresso Macchiato (Eurovision 2025 - Estonia)/vocals.wav",
+          "bpm": 120,
+          "key": "F",
+          "pitch_shift": 1.0416666666666667,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "02_chorus": {
+      "type": "chorus",
+      "stems": {
+        "bass": {
+          "song": "01-05 Run With U (Eurovision 2025 - Azerbaijan)",
+          "file": "../stems/01-05 Run With U (Eurovision 2025 - Azerbaijan)/bass.wav",
+          "bpm": 115,
+          "key": "G",
+          "pitch_shift": 1.0869565217391304,
+          "needs_timestretch": true
+        },
+        "drums": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/drums.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/other.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/piano.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-11 Espresso Macchiato (Eurovision 2025 - Estonia)",
+          "file": "../stems/01-11 Espresso Macchiato (Eurovision 2025 - Estonia)/vocals.wav",
+          "bpm": 120,
+          "key": "F",
+          "pitch_shift": 1.0416666666666667,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "03_bridge": {
+      "type": "bridge",
+      "stems": {
+        "bass": {
+          "song": "01-05 Run With U (Eurovision 2025 - Azerbaijan)",
+          "file": "../stems/01-05 Run With U (Eurovision 2025 - Azerbaijan)/bass.wav",
+          "bpm": 115,
+          "key": "G",
+          "pitch_shift": 1.0869565217391304,
+          "needs_timestretch": true
+        },
+        "drums": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/drums.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/other.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/piano.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-11 Espresso Macchiato (Eurovision 2025 - Estonia)",
+          "file": "../stems/01-11 Espresso Macchiato (Eurovision 2025 - Estonia)/vocals.wav",
+          "bpm": 120,
+          "key": "F",
+          "pitch_shift": 1.0416666666666667,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "04_bridge": {
+      "type": "bridge",
+      "stems": {
+        "bass": {
+          "song": "01-05 Run With U (Eurovision 2025 - Azerbaijan)",
+          "file": "../stems/01-05 Run With U (Eurovision 2025 - Azerbaijan)/bass.wav",
+          "bpm": 115,
+          "key": "G",
+          "pitch_shift": 1.0869565217391304,
+          "needs_timestretch": true
+        },
+        "drums": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/drums.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/other.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/piano.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-11 Espresso Macchiato (Eurovision 2025 - Estonia)",
+          "file": "../stems/01-11 Espresso Macchiato (Eurovision 2025 - Estonia)/vocals.wav",
+          "bpm": 120,
+          "key": "F",
+          "pitch_shift": 1.0416666666666667,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "05_chorus": {
+      "type": "chorus",
+      "stems": {
+        "bass": {
+          "song": "01-05 Run With U (Eurovision 2025 - Azerbaijan)",
+          "file": "../stems/01-05 Run With U (Eurovision 2025 - Azerbaijan)/bass.wav",
+          "bpm": 115,
+          "key": "G",
+          "pitch_shift": 1.0869565217391304,
+          "needs_timestretch": true
+        },
+        "drums": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/drums.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/other.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/piano.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-11 Espresso Macchiato (Eurovision 2025 - Estonia)",
+          "file": "../stems/01-11 Espresso Macchiato (Eurovision 2025 - Estonia)/vocals.wav",
+          "bpm": 120,
+          "key": "F",
+          "pitch_shift": 1.0416666666666667,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "06_chorus": {
+      "type": "chorus",
+      "stems": {
+        "bass": {
+          "song": "01-05 Run With U (Eurovision 2025 - Azerbaijan)",
+          "file": "../stems/01-05 Run With U (Eurovision 2025 - Azerbaijan)/bass.wav",
+          "bpm": 115,
+          "key": "G",
+          "pitch_shift": 1.0869565217391304,
+          "needs_timestretch": true
+        },
+        "drums": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/drums.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/other.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)",
+          "file": "../stems/01-09 Kiss Kiss Goodbye (Eurovision 2025 - Czechia)/piano.wav",
+          "bpm": 125,
+          "key": "C",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-11 Espresso Macchiato (Eurovision 2025 - Estonia)",
+          "file": "../stems/01-11 Espresso Macchiato (Eurovision 2025 - Estonia)/vocals.wav",
+          "bpm": 120,
+          "key": "F",
+          "pitch_shift": 1.0416666666666667,
+          "needs_timestretch": false
+        }
+      }
+    }
+  },
+  "compatible_songs": [
+    "01-05 Run With U (Eurovision 2025 - Azerbaijan)",
+    "01-11 Espresso Macchiato (Eurovision 2025 - Estonia)",
+    "01-02 SURVIVOR (Eurovision 2025 - Armenia)"
+  ]
+}

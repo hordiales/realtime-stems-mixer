@@ -1,0 +1,381 @@
+{
+  "theme": "energetic",
+  "base_song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+  "base_bpm": 140,
+  "base_key": "D",
+  "structure": [
+    "intro",
+    "verse",
+    "chorus",
+    "verse",
+    "bridge",
+    "chorus",
+    "chorus",
+    "outro"
+  ],
+  "sections": {
+    "00_intro": {
+      "type": "intro",
+      "stems": {
+        "bass": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/bass.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/drums.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/other.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/piano.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/vocals.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "01_verse": {
+      "type": "verse",
+      "stems": {
+        "bass": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/bass.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/drums.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/other.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/piano.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/vocals.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "02_chorus": {
+      "type": "chorus",
+      "stems": {
+        "bass": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/bass.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/drums.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/other.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/piano.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/vocals.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "03_verse": {
+      "type": "verse",
+      "stems": {
+        "bass": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/bass.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/drums.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/other.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/piano.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/vocals.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "04_bridge": {
+      "type": "bridge",
+      "stems": {
+        "bass": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/bass.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/drums.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/other.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/piano.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/vocals.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "05_chorus": {
+      "type": "chorus",
+      "stems": {
+        "bass": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/bass.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/drums.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/other.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/piano.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/vocals.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "06_chorus": {
+      "type": "chorus",
+      "stems": {
+        "bass": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/bass.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/drums.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/other.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/piano.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/vocals.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "07_outro": {
+      "type": "outro",
+      "stems": {
+        "bass": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/bass.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/drums.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-08 Shh (Eurovision 2025 - Cyprus)",
+          "file": "../stems/01-08 Shh (Eurovision 2025 - Cyprus)/other.wav",
+          "bpm": 143,
+          "key": "A",
+          "pitch_shift": 0.9790209790209791,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/piano.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-10 Hallucination (Eurovision 2025 - Denmark)",
+          "file": "../stems/01-10 Hallucination (Eurovision 2025 - Denmark)/vocals.wav",
+          "bpm": 140,
+          "key": "D",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    }
+  },
+  "compatible_songs": [
+    "01-08 Shh (Eurovision 2025 - Cyprus)"
+  ]
+}

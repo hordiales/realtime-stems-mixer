@@ -1,0 +1,333 @@
+{
+  "theme": "chill",
+  "base_song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+  "base_bpm": 95,
+  "base_key": "Em",
+  "structure": [
+    "intro",
+    "verse",
+    "chorus",
+    "verse",
+    "solo",
+    "chorus",
+    "outro"
+  ],
+  "sections": {
+    "00_intro": {
+      "type": "intro",
+      "stems": {
+        "bass": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/bass.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/drums.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/other.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/piano.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/vocals.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "01_verse": {
+      "type": "verse",
+      "stems": {
+        "bass": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/bass.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/drums.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/other.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/piano.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/vocals.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "02_chorus": {
+      "type": "chorus",
+      "stems": {
+        "bass": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/bass.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/drums.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/other.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/piano.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/vocals.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "03_verse": {
+      "type": "verse",
+      "stems": {
+        "bass": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/bass.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/drums.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/other.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/piano.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/vocals.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "04_solo": {
+      "type": "solo",
+      "stems": {
+        "bass": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/bass.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/drums.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/other.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/piano.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/vocals.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "05_chorus": {
+      "type": "chorus",
+      "stems": {
+        "bass": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/bass.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/drums.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/other.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/piano.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/vocals.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    },
+    "06_outro": {
+      "type": "outro",
+      "stems": {
+        "bass": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/bass.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "drums": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/drums.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "other": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/other.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "piano": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/piano.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        },
+        "vocals": {
+          "song": "01-01 Zjerm (Eurovision 2025 - Albania)",
+          "file": "../stems/01-01 Zjerm (Eurovision 2025 - Albania)/vocals.wav",
+          "bpm": 95,
+          "key": "Em",
+          "pitch_shift": 1.0,
+          "needs_timestretch": false
+        }
+      }
+    }
+  },
+  "compatible_songs": []
+}

@@ -59,7 +59,7 @@ def quick_demo():
     print("=" * 60)
     
     # Initialize mixer
-    mixer = AdvancedMusicMixer("stems", "song-structures")
+    mixer = AdvancedMusicMixer("../stems", "../song-structures")
     
     # Show available songs grouped by BPM
     print(f"\n📚 Song Library ({len(mixer.songs)} songs):")

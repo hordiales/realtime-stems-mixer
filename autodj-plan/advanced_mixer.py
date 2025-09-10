@@ -355,7 +355,7 @@ class AdvancedMusicMixer:
 
 def main():
     """Enhanced main function with multiple remix examples"""
-    mixer = AdvancedMusicMixer("stems", "song-structures")
+    mixer = AdvancedMusicMixer("../stems", "../song-structures")
     
     # Analysis
     mixer.analyze_mixing_possibilities()
