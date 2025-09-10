@@ -42,18 +42,35 @@ python stem_mixer_smart.py
 | `cleanup` | Free unused memory | `cleanup` |
 | `quit` | Exit mixer | `quit` |
 
-### Smart Stem Loading
+### Smart Stem Loading (Beat-Quantized)
 
-The key feature is **individual stem loading** from different songs:
+The key feature is **individual stem loading** from different songs with **temporal synchronization**:
 
 | Command | Description | Example |
 |---------|-------------|---------|
-| `a.<stem> <song>` | Load stem to Deck A | `a.bass 2` |
-| `b.<stem> <song>` | Load stem to Deck B | `b.vocals 5` |
+| `a.<stem> <song>` | Load stem to Deck A (quantized to beat) | `a.bass 2` |
+| `b.<stem> <song>` | Load stem to Deck B (quantized to beat) | `b.vocals 5` |
 | `a.<stem>.<section> <song>` | Load stem from specific section | `a.drums.chorus 3` |
 | `b.<stem>.<section> <song>` | Load stem from specific section | `b.bass.verse 1` |
 
 **Available stems:** `bass`, `drums`, `vocals`, `piano`, `other`
+
+### Instant Playback (No Quantization)
+
+For manual timing control and samples:
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `instant.<stem> <song>` | Play stem immediately (no quantization) | `instant.bass 3` |
+| `sample.<stem> <song>` | Fire one-shot sample (no loop, instant) | `sample.vocals 1` |
+
+### Temporal Synchronization Controls
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `sync on/off` | Enable/disable beat quantization | `sync on` |
+| `quantize <1\|2\|4\|8>` | Set quantization resolution (beats) | `quantize 4` |
+| `sync status` | Show synchronization status | `sync status` |
 
 ### Volume Controls
 
@@ -103,19 +120,45 @@ The key feature is **individual stem loading** from different songs:
 
 ## 🎛️ Example Mixing Session
 
-### 1. Create a Mix
+### 1. Create a Synchronized Mix
 
-Load different stems from different songs:
+Load different stems from different songs with beat quantization:
 
 ```bash
-# Load bass from song 0, drums from song 2
+# Check sync status
+🎛️🧠 > sync status
+🔄 Sync: enabled
+⏱️  BPM: 128.0
+🎯 Quantize: 1 beats
+📍 Current beat: 5.23
+
+# Load bass from song 0 (will wait for next beat)
 🎛️🧠 > a.bass 0
 📥 Smart loading: bass from Sweden Loreen Tattoo → buffer 1000
-▶️  Smart playing: buffer 1000 (rate: 0.98)
+⏱️  Quantizing: buffer 1000 in 0.232s
+▶️  Smart playing: buffer 1000 (rate: 0.98) 🔄
 
+# Load drums from song 2 (also quantized)
 🎛️🧠 > a.drums 2  
 📥 Smart loading: drums from Ukraine Tvorchi Heart Of Steel → buffer 1001
-▶️  Smart playing: buffer 1001 (rate: 1.07)
+⏱️  Quantizing: buffer 1001 in 0.127s
+▶️  Smart playing: buffer 1001 (rate: 1.07) 🔄
+```
+
+### 1a. Instant Playback (No Sync)
+
+For immediate playback without waiting:
+
+```bash
+# Fire instant sample (no sync wait)
+🎛️🧠 > sample.vocals 3
+📥 Smart loading: vocals from Finland Kaarija Cha Cha Cha → buffer 1002
+🎯 Sample fired: vocals from Finland Kaarija Cha Cha Cha
+
+# Play stem instantly (manual timing)
+🎛️🧠 > instant.piano 1
+📥 Smart loading: piano from Spain Blanca Paloma Eaea → buffer 1003
+▶️  Smart playing: buffer 1003 (rate: 1.35) ⏩
 ```
 
 ### 2. Load Specific Sections
@@ -148,6 +191,51 @@ Load different stems from different songs:
 🎛️🧠 > bpm 140
 🎵 BPM: 140.0
 ▶️  Smart playing: buffer 1000 (rate: 1.08)  # Automatically adjusts
+```
+
+## ⏱️ Temporal Synchronization
+
+### How Beat Quantization Works
+
+The Smart Stem Mixer features **temporal synchronization** to keep all stems perfectly aligned:
+
+1. **Master Timeline:** A global beat timeline runs continuously based on current BPM
+2. **Beat Quantization:** New stems wait for the next beat boundary before starting
+3. **Instant Override:** Use `instant.*` and `sample.*` commands to bypass quantization
+4. **Configurable Resolution:** Set quantization to 1, 2, 4, or 8 beats
+
+### Synchronization Modes
+
+| Mode | Description | When to Use |
+|------|-------------|-------------|
+| **Quantized** (default) | Waits for next beat boundary | Normal mixing, maintaining rhythm |
+| **Instant** | Plays immediately | Manual timing, special effects |
+| **Sample** | One-shot, no loop, instant | Sound effects, vocal stabs |
+
+### Sync Controls Examples
+
+```bash
+# Enable tight 1-beat quantization
+🎛️🧠 > sync on
+🔄 Beat quantization enabled
+
+🎛️🧠 > quantize 1
+🎯 Quantization set to 1 beats
+
+# Set looser 4-beat quantization (phrase-level)
+🎛️🧠 > quantize 4
+🎯 Quantization set to 4 beats
+
+# Disable sync for free-form mixing
+🎛️🧠 > sync off
+⏩ Beat quantization disabled
+
+# Check current sync status
+🎛️🧠 > sync status
+🔄 Sync: enabled
+⏱️  BPM: 140.0
+🎯 Quantize: 4 beats
+📍 Current beat: 12.75
 ```
 
 ## 💾 Smart Memory Management
@@ -280,20 +368,39 @@ s.reboot;
 4. **Real-time:** Instant BPM and pitch adjustments
 5. **Smart Cleanup:** Automatic memory management
 6. **Visual Feedback:** Clear status and loading information
+7. **Temporal Sync:** Beat-quantized loading keeps everything perfectly aligned
+8. **Flexible Timing:** Choose between quantized, instant, or one-shot playback modes
+9. **Performance Ready:** Live-friendly sync controls for DJ techniques
 
 ## 🚀 Advanced Usage
 
-### Create Complex Mixes
+### Create Complex Synchronized Mixes
 
 ```bash
-# Progressive house build-up
+# Progressive house build-up with beat quantization
 🎛️🧠 > bpm 128
-🎛️🧠 > a.bass.intro 0      # Start with bass intro
-🎛️🧠 > a.drums.verse 1     # Add different drums
-🎛️🧠 > b.vocals.chorus 2   # Prepare vocals on B
+🎛️🧠 > quantize 4          # 4-beat phrase quantization
+🎛️🧠 > a.bass.intro 0      # Quantized to phrase boundary
+⏱️  Quantizing: buffer 1000 in 1.250s
+🎛️🧠 > a.drums.verse 1     # Will align with bass
+⏱️  Quantizing: buffer 1001 in 0.625s
+🎛️🧠 > b.vocals.chorus 2   # Prepare vocals on B (quantized)
 🎛️🧠 > cross 0.0           # Only A playing
 🎛️🧠 > cross 0.5           # Blend in vocals
-🎛️🧠 > b.piano.bridge 3    # Add piano bridge
+🎛️🧠 > instant.piano 3     # Add piano immediately (no wait)
+▶️  Smart playing: buffer 1003 (rate: 1.07) ⏩
+```
+
+### Performance Techniques
+
+```bash
+# Quick drop and build technique
+🎛️🧠 > sync off           # Disable for instant control
+🎛️🧠 > sample.vocals 2    # Drop vocal sample instantly
+🎛️🧠 > sync on            # Re-enable for next elements
+🎛️🧠 > quantize 1         # Tight timing
+🎛️🧠 > a.drums 4          # Drums on next beat
+🎛️🧠 > a.bass 4           # Bass on next beat (layered)
 ```
 
 ### Live Performance

@@ -9,6 +9,7 @@ import threading
 import time
 import random
 import json
+import math
 from pathlib import Path
 from pythonosc import dispatcher, udp_client
 from pythonosc.osc_server import ThreadingOSCUDPServer
@@ -40,6 +41,13 @@ class SmartSuperColliderStemMixer:
         self.current_key = "C"
         self.crossfade_position = 0.0
         self.master_volume = self.config.audio.master_volume
+        
+        # Temporal synchronization
+        self.sync_enabled = True           # Enable/disable temporal sync
+        self.beat_duration = 60.0 / self.current_bpm  # Seconds per beat
+        self.master_start_time = time.time()  # Global timeline reference
+        self.quantize_resolution = 4       # Quantize to quarter notes (1=whole, 2=half, 4=quarter)
+        self.pending_stems = []            # Stems waiting for next quantized beat
         
         # Smart loading state
         self.available_songs = []
@@ -135,6 +143,39 @@ class SmartSuperColliderStemMixer:
         
         print(f"✅ Total songs indexed: {len(self.available_songs)}")
     
+    def _get_current_beat_position(self) -> float:
+        """Get current position in beats since master start time"""
+        elapsed_time = time.time() - self.master_start_time
+        return elapsed_time / self.beat_duration
+    
+    def _get_next_quantized_beat(self) -> float:
+        """Get timestamp of next quantized beat"""
+        current_beat = self._get_current_beat_position()
+        quantize_interval = 1.0 / self.quantize_resolution
+        
+        # Round up to next quantization point
+        next_quantized_beat = math.ceil(current_beat / quantize_interval) * quantize_interval
+        
+        # Convert back to timestamp
+        return self.master_start_time + (next_quantized_beat * self.beat_duration)
+    
+    def _calculate_sync_delay(self) -> float:
+        """Calculate delay until next quantized beat"""
+        if not self.sync_enabled:
+            return 0.0
+        
+        next_beat_time = self._get_next_quantized_beat()
+        current_time = time.time()
+        delay = max(0.0, next_beat_time - current_time)
+        
+        return delay
+    
+    def _sync_update_bpm(self, new_bpm: float):
+        """Update BPM and recalculate beat timing"""
+        self.current_bpm = new_bpm
+        self.beat_duration = 60.0 / self.current_bpm
+        print(f"🎵 BPM updated: {new_bpm:.1f} (beat duration: {self.beat_duration:.3f}s)")
+    
     def _setup_osc_server(self):
         """Setup OSC server for control"""
         if not self.config.osc.enable_osc:
@@ -213,8 +254,14 @@ class SmartSuperColliderStemMixer:
             print(f"❌ Error loading {stem_name}: {e}")
             return None
     
-    def _smart_play_stem(self, buffer_id: int, song: dict, stem_type: str, section: str = None):
-        """Smart play: play stem with optional section timing"""
+    def _smart_play_stem(self, buffer_id: int, song: dict, stem_type: str, section: str = None, 
+                         sync_mode: str = "quantized", loop: bool = True):
+        """Smart play: play stem with temporal synchronization options
+        
+        Args:
+            sync_mode: "quantized" (wait for beat), "instant" (play immediately)
+            loop: True for continuous looping, False for one-shot playback
+        """
         try:
             # Calculate playback parameters
             playback_rate = self.current_bpm / song['bpm'] if song['bpm'] > 0 else 1.0
@@ -234,15 +281,36 @@ class SmartSuperColliderStemMixer:
                 print(f"❌ Invalid buffer ID: {buffer_id}")
                 return
             
-            # Send play command with retry logic
+            # Prepare message parameters
             message_params = [
                 int(buffer_id),
                 float(playback_rate),
                 float(volume),
-                1,  # loop
+                int(loop),  # loop flag
                 float(start_pos)
             ]
             
+            # Handle synchronization modes
+            if sync_mode == "quantized" and self.sync_enabled:
+                sync_delay = self._calculate_sync_delay()
+                if sync_delay > 0.01:  # Only delay if significant
+                    # Schedule for next quantized beat
+                    print(f"⏱️  Quantizing: buffer {buffer_id} in {sync_delay:.3f}s")
+                    timer = threading.Timer(sync_delay, self._execute_play_command, 
+                                          args=[message_params, buffer_id, song, stem_type, section])
+                    timer.start()
+                    return
+            
+            # Execute immediately (instant mode or no delay needed)
+            self._execute_play_command(message_params, buffer_id, song, stem_type, section)
+            
+        except Exception as e:
+            print(f"❌ Error preparing buffer {buffer_id}: {e}")
+    
+    def _execute_play_command(self, message_params: list, buffer_id: int, song: dict, 
+                            stem_type: str, section: str = None):
+        """Execute the actual play command with retry logic"""
+        try:
             max_retries = 3
             for attempt in range(max_retries):
                 try:
@@ -257,11 +325,16 @@ class SmartSuperColliderStemMixer:
             
             self.playing_stems.add(buffer_id)
             
-            section_info = f" from {start_pos:.1f}s [{section}]" if section else ""
-            print(f"▶️  Smart playing: buffer {buffer_id}{section_info} (rate: {playback_rate:.2f})")
+            # Show playback info
+            loop_info = "🔄" if message_params[3] else "🎯"
+            section_info = f" from {message_params[4]:.1f}s [{section}]" if section else ""
+            current_beat = self._get_current_beat_position()
+            
+            print(f"▶️  {loop_info} buffer {buffer_id}{section_info} | "
+                  f"rate: {message_params[1]:.3f} | beat: {current_beat:.1f}")
             
         except Exception as e:
-            print(f"❌ Error playing buffer {buffer_id}: {e}")
+            print(f"❌ Error executing play command for buffer {buffer_id}: {e}")
     
     def _load_individual_stem(self, deck: str, song_index: int, stem_type: str, section: str = None):
         """Load and play individual stem with smart loading"""
@@ -287,8 +360,54 @@ class SmartSuperColliderStemMixer:
             'section': section
         }
         
-        # Smart play
-        self._smart_play_stem(buffer_id, song, stem_type, section)
+        # Smart play with default quantized sync
+        self._smart_play_stem(buffer_id, song, stem_type, section, sync_mode="quantized", loop=True)
+        
+        return True
+    
+    def _load_individual_sample(self, deck: str, song_index: int, stem_type: str, section: str = None):
+        """Load and play individual sample instantly (no sync, no loop)"""
+        # Don't stop existing stems for samples - they're additive
+        
+        # Smart load new sample  
+        buffer_id = self._smart_load_stem(song_index, stem_type, section)
+        if buffer_id is None:
+            return False
+        
+        song = self.available_songs[song_index]
+        
+        # Play instantly without sync or looping (for samples/effects)
+        self._smart_play_stem(buffer_id, song, stem_type, section, sync_mode="instant", loop=False)
+        
+        print(f"🎯 Sample fired: {stem_type} from {song['name']}")
+        return True
+    
+    def _play_instant_stem(self, deck: str, song_index: int, stem_type: str, section: str = None):
+        """Play stem instantly without quantization (for manual timing)"""
+        # Stop existing stem of this type in deck
+        deck_stems = self.deck_a_stems if deck == 'A' else self.deck_b_stems
+        
+        if stem_type in deck_stems:
+            old_buffer_id = deck_stems[stem_type]['buffer_id']
+            self._stop_stem(old_buffer_id)
+            del deck_stems[stem_type]
+        
+        # Smart load new stem
+        buffer_id = self._smart_load_stem(song_index, stem_type, section)
+        if buffer_id is None:
+            return False
+        
+        song = self.available_songs[song_index]
+        
+        # Store deck configuration
+        deck_stems[stem_type] = {
+            'buffer_id': buffer_id,
+            'song': song,
+            'section': section
+        }
+        
+        # Play instantly with looping
+        self._smart_play_stem(buffer_id, song, stem_type, section, sync_mode="instant", loop=True)
         
         return True
     
@@ -441,12 +560,22 @@ class SmartSuperColliderStemMixer:
         print("  cleanup               - Cleanup unused memory")
         print("  quit                  - Exit")
         print()
-        print("=== SMART STEM LOADING ===")
-        print("  a.<stem> <song>       - Load stem to deck A")
-        print("  b.<stem> <song>       - Load stem to deck B")
+        print("=== SMART STEM LOADING (Beat-Quantized) ===")
+        print("  a.<stem> <song>       - Load stem to deck A (quantized)")
+        print("  b.<stem> <song>       - Load stem to deck B (quantized)")
         print("  a.<stem>.<section> <song> - Load stem + section to deck A")
         print("  b.<stem>.<section> <song> - Load stem + section to deck B")
         print("  Examples: a.bass 2, b.vocals.chorus 5")
+        print()
+        print("=== INSTANT PLAYBACK ===")
+        print("  instant.<stem> <song> - Play stem instantly (no quantization)")
+        print("  sample.<stem> <song>  - Fire one-shot sample (no loop, instant)")
+        print("  Examples: instant.bass 3, sample.vocals 1")
+        print()
+        print("=== SYNC CONTROLS ===")
+        print("  sync on/off           - Enable/disable beat quantization")
+        print("  quantize <1|2|4|8>    - Set quantization resolution (beats)")
+        print("  sync status           - Show synchronization status")
         print()
         print("=== VOLUME CONTROLS ===")
         print("  bass/drums/vocals/piano/other <0-1> - Set volume")
@@ -510,6 +639,56 @@ class SmartSuperColliderStemMixer:
                             print("❌ Invalid song number")
                     except ValueError:
                         print("❌ Invalid song number")
+                
+                elif command == "sync" and len(parts) == 2:
+                    # Sync control commands
+                    if parts[1] == "on":
+                        self.sync_enabled = True
+                        print("🔄 Beat quantization enabled")
+                    elif parts[1] == "off":
+                        self.sync_enabled = False
+                        print("⏩ Beat quantization disabled")
+                    elif parts[1] == "status":
+                        status = "enabled" if self.sync_enabled else "disabled"
+                        print(f"🔄 Sync: {status}")
+                        print(f"⏱️  BPM: {self.current_bpm:.1f}")
+                        print(f"🎯 Quantize: {self.quantize_resolution} beats")
+                        if self.master_start_time:
+                            current_beat = self._get_current_beat_position()
+                            print(f"📍 Current beat: {current_beat:.2f}")
+                    else:
+                        print("❌ Use: sync on/off/status")
+                
+                elif command == "quantize" and len(parts) == 2:
+                    try:
+                        resolution = int(parts[1])
+                        if resolution in [1, 2, 4, 8]:
+                            self.quantize_resolution = resolution
+                            print(f"🎯 Quantization set to {resolution} beats")
+                        else:
+                            print("❌ Use: quantize 1/2/4/8")
+                    except ValueError:
+                        print("❌ Invalid quantization value")
+                
+                elif command.startswith("instant.") and len(parts) == 2:
+                    # Instant playback commands
+                    try:
+                        stem_type = command.split(".", 1)[1]
+                        song_id = int(parts[1])
+                        # Default to deck A for instant commands
+                        self._play_instant_stem('A', song_id, stem_type)
+                    except ValueError:
+                        print("❌ Invalid command format")
+                
+                elif command.startswith("sample.") and len(parts) == 2:
+                    # Sample (one-shot) commands
+                    try:
+                        stem_type = command.split(".", 1)[1]
+                        song_id = int(parts[1])
+                        # Default to deck A for sample commands
+                        self._load_individual_sample('A', song_id, stem_type)
+                    except ValueError:
+                        print("❌ Invalid command format")
                 
                 elif "." in command and len(parts) == 2:
                     # Smart stem loading
