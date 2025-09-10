@@ -59,6 +59,8 @@ Eurovision/
 └── README.md                               # This file
 ```
 
+**IMPORTANT NOTE:** for a reliable stems separation use demucs/spleeter and for song structure [allinone](https://github.com/hordiales/all-in-one) (which also does stems split using demucs)
+
 ## Song Database
 
 The engine currently includes **11 Eurovision 2025 songs** with BPMs ranging from 67-154:
