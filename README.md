@@ -1,9 +1,9 @@
-# Eurovision Music Mixing Engine 🎵
+# Music Mixing Engine 🎵
 
-A **real-time** music mixing engine that combines stems from different Eurovision songs. Features both intelligent offline planning and **live SuperCollider-based mixing** with smart memory management.
+A **real-time** music mixing engine that combines stems from different songs sections (intro, verse, chorus, etc). Features both intelligent offline planning with smart memory/resources management.
 
 ***
-Demo: Livecoding session, mixing stems from different songs:
+Demo: Livecoding session, mixing stems from different Eurovision songs:
 https://youtu.be/1cXhiNixB_o
 ***
 
