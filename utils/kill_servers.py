@@ -61,6 +61,9 @@ def main():
     
     # Kill specific Python scripts
     scripts_to_kill = [
+        'audio_server.py',
+        'stem_mixer_smart.py',
+        'dj_plan_executor.py',
         'realtime_stem_mixer.py',
         'infinite_dj_remix.py', 
         'live_remix_generator.py',
@@ -74,8 +77,8 @@ def main():
         kill_process_by_name(script)
     
     print("\n🔍 Killing processes on OSC ports...")
-    # Kill by common OSC ports
-    osc_ports = [5005, 5006, 5007, 8000, 9000]
+    # Kill by common OSC ports (including SuperCollider default)
+    osc_ports = [57120, 5005, 5006, 5007, 8000, 9000]
     for port in osc_ports:
         kill_by_port(port)
  
