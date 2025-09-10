@@ -1,0 +1,570 @@
+#!/usr/bin/env python3
+"""
+Smart Loading SuperCollider Stem Mixer
+- Only loads stems when actually playing them
+- Perfect for 16GB systems
+"""
+
+import threading
+import time
+import random
+import json
+from pathlib import Path
+from pythonosc import dispatcher, udp_client
+from pythonosc.osc_server import ThreadingOSCUDPServer
+from typing import Dict, List, Optional
+from config_loader import ConfigLoader, MixerConfig
+
+class SmartSuperColliderStemMixer:
+    """Smart loading stem mixer - only loads what's playing"""
+    
+    def __init__(self, stems_dir: str = "stems", structures_dir: str = "song-structures",
+                 sc_host: str = "localhost", sc_port: int = 57120,
+                 osc_port: int = 5005, config_file: str = "mixer_config.json"):
+        
+        # Load configuration
+        self.config_loader = ConfigLoader(config_file)
+        self.config = self.config_loader.load_config()
+        
+        # SuperCollider OSC client
+        self.sc_host = sc_host
+        self.sc_port = sc_port
+        self.sc_client = udp_client.SimpleUDPClient(sc_host, sc_port)
+        
+        # Directories
+        self.stems_dir = Path(stems_dir)
+        self.structures_dir = Path(structures_dir)
+        
+        # Mixing state
+        self.current_bpm = 125.0
+        self.current_key = "C"
+        self.crossfade_position = 0.0
+        self.master_volume = self.config.audio.master_volume
+        
+        # Smart loading state
+        self.available_songs = []
+        self.song_structures = {}
+        self.loaded_buffers = set()        # Track what's loaded in SuperCollider
+        self.playing_stems = set()         # Track what's currently playing
+        self.deck_a_stems = {}             # Current deck A configuration
+        self.deck_b_stems = {}             # Current deck B configuration
+        self.stem_volumes = self.config.mixing.stem_volumes.copy()
+        
+        # Buffer ID management
+        self.next_synth_id = 1000
+        
+        # Load song information
+        self._load_song_info()
+        
+        # OSC server
+        self.osc_port = osc_port
+        self.osc_server = None
+        self._setup_osc_server()
+        
+        # Control thread
+        self.running = True
+        self.control_thread = threading.Thread(target=self._control_loop, daemon=True)
+        
+        print(f"🎛️🧠 SMART LOADING EUROVISION STEM MIXER 🧠🎛️")
+        print(f"🎵 Songs Available: {len(self.available_songs)}")
+        print(f"📊 Song Structures: {len(self.song_structures)}")
+        print(f"🎛️  SuperCollider: {sc_host}:{sc_port}")
+        print(f"📡 OSC Control: localhost:{osc_port}")
+        print("💡 Smart Loading: Only loads stems when playing")
+        
+    def _load_song_info(self):
+        """Load song and structure information (metadata only)"""
+        # Load structure JSON files
+        if self.structures_dir.exists():
+            for json_file in self.structures_dir.glob("*.json"):
+                try:
+                    with open(json_file, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                    
+                    sections = []
+                    for seg in data.get('segments', []):
+                        sections.append({
+                            'start': seg['start'],
+                            'end': seg['end'], 
+                            'label': seg['label']
+                        })
+                    
+                    self.song_structures[json_file.stem] = {
+                        'bpm': data.get('bpm', 120),
+                        'sections': sections
+                    }
+                except Exception as e:
+                    print(f"⚠️  Could not load structure {json_file.name}: {e}")
+        
+        # Load song directory info (no audio loading yet)
+        if self.stems_dir.exists():
+            for song_dir in self.stems_dir.iterdir():
+                if song_dir.is_dir():
+                    song_stems = {}
+                    stem_types = ['bass', 'drums', 'vocals', 'piano', 'other']
+                    
+                    for stem_type in stem_types:
+                        stem_file = song_dir / f"{stem_type}.wav"
+                        if stem_file.exists():
+                            song_stems[stem_type] = stem_file
+                    
+                    if len(song_stems) >= 2:
+                        # Find matching structure
+                        structure = None
+                        for struct_name, struct_data in self.song_structures.items():
+                            if song_dir.name in struct_name:
+                                structure = struct_data
+                                break
+                        
+                        bpm = structure['bpm'] if structure else 120.0
+                        sections = structure['sections'] if structure else []
+                        
+                        song_data = {
+                            'id': song_dir.name,
+                            'name': song_dir.name.replace('_', ' ').title(),
+                            'stems': song_stems,
+                            'bpm': bpm,
+                            'sections': sections
+                        }
+                        
+                        self.available_songs.append(song_data)
+                        
+                        section_labels = list(set(s['label'] for s in sections)) if sections else []
+                        structure_status = "✅" if structure else "❌"
+                        print(f"📋 Found: {song_data['name']} (BPM: {bpm}, Structure: {structure_status}, Sections: {len(section_labels)})")
+        
+        print(f"✅ Total songs indexed: {len(self.available_songs)}")
+    
+    def _setup_osc_server(self):
+        """Setup OSC server for control"""
+        if not self.config.osc.enable_osc:
+            return
+            
+        disp = dispatcher.Dispatcher()
+        
+        # Basic controls
+        disp.map("/bpm", self.handle_bpm_change)
+        disp.map("/crossfade", self.handle_crossfade)
+        disp.map("/master_volume", self.handle_master_volume)
+        disp.map("/key", self.handle_key_change)
+        disp.map("/status", lambda unused_addr: self._show_status())
+        disp.map("/random", lambda unused_addr: self._randomize_mix())
+        
+        # Memory management
+        disp.map("/memory_status", lambda unused_addr: self._show_memory_status())
+        disp.map("/memory_cleanup", lambda unused_addr: self._cleanup_memory())
+        
+        # Stem volume controls
+        for stem in ['bass', 'drums', 'vocals', 'piano', 'other']:
+            disp.map(f"/stem/{stem}", lambda unused_addr, vol, s=stem: self._set_stem_volume(s, vol))
+        
+        try:
+            self.osc_server = ThreadingOSCUDPServer((self.config.osc.host, self.osc_port), disp)
+            osc_thread = threading.Thread(target=self.osc_server.serve_forever, daemon=True)
+            osc_thread.start()
+            print(f"📡 OSC server started on {self.config.osc.host}:{self.osc_port}")
+        except Exception as e:
+            print(f"❌ Failed to start OSC server: {e}")
+    
+    def _smart_load_stem(self, song_index: int, stem_type: str, section: str = None) -> Optional[int]:
+        """Smart load: only load stem if not already loaded"""
+        if not (0 <= song_index < len(self.available_songs)):
+            print(f"❌ Invalid song index: {song_index}")
+            return None
+            
+        song = self.available_songs[song_index]
+        if stem_type not in song['stems']:
+            print(f"❌ Stem {stem_type} not found in {song['name']}")
+            return None
+        
+        # Generate buffer ID
+        buffer_id = self.next_synth_id
+        self.next_synth_id += 1
+        
+        # Send load command to SuperCollider (smart loading server will handle it)
+        stem_file = song['stems'][stem_type]
+        stem_name = f"{song['name']}_{stem_type}"
+        if section:
+            stem_name += f"_{section}"
+        
+        try:
+            self.sc_client.send_message("/load_buffer", [
+                buffer_id,
+                str(stem_file.absolute()),
+                stem_name
+            ])
+            
+            self.loaded_buffers.add(buffer_id)
+            
+            section_info = f" [{section}]" if section else ""
+            print(f"📥 Smart loading: {stem_type}{section_info} from {song['name']} → buffer {buffer_id}")
+            
+            return buffer_id
+            
+        except Exception as e:
+            print(f"❌ Error loading {stem_name}: {e}")
+            return None
+    
+    def _smart_play_stem(self, buffer_id: int, song: dict, stem_type: str, section: str = None):
+        """Smart play: play stem with optional section timing"""
+        try:
+            # Calculate playback parameters
+            playback_rate = self.current_bpm / song['bpm'] if song['bpm'] > 0 else 1.0
+            volume = self.stem_volumes.get(stem_type, 0.8)
+            
+            # Section timing
+            start_pos = 0.0
+            if section and song['sections']:
+                # Find section timing
+                for sect in song['sections']:
+                    if sect['label'].lower() == section.lower():
+                        start_pos = sect['start']
+                        break
+            
+            # Send play command
+            self.sc_client.send_message("/play_stem", [
+                buffer_id,
+                playback_rate,
+                volume,
+                1,  # loop
+                start_pos
+            ])
+            
+            self.playing_stems.add(buffer_id)
+            
+            section_info = f" from {start_pos:.1f}s [{section}]" if section else ""
+            print(f"▶️  Smart playing: buffer {buffer_id}{section_info} (rate: {playback_rate:.2f})")
+            
+        except Exception as e:
+            print(f"❌ Error playing buffer {buffer_id}: {e}")
+    
+    def _load_individual_stem(self, deck: str, song_index: int, stem_type: str, section: str = None):
+        """Load and play individual stem with smart loading"""
+        # Stop existing stem of this type in deck
+        deck_stems = self.deck_a_stems if deck == 'A' else self.deck_b_stems
+        
+        if stem_type in deck_stems:
+            old_buffer_id = deck_stems[stem_type]['buffer_id']
+            self._stop_stem(old_buffer_id)
+            del deck_stems[stem_type]
+        
+        # Smart load new stem
+        buffer_id = self._smart_load_stem(song_index, stem_type, section)
+        if buffer_id is None:
+            return False
+        
+        song = self.available_songs[song_index]
+        
+        # Store deck configuration
+        deck_stems[stem_type] = {
+            'buffer_id': buffer_id,
+            'song': song,
+            'section': section
+        }
+        
+        # Smart play
+        self._smart_play_stem(buffer_id, song, stem_type, section)
+        
+        return True
+    
+    def _stop_stem(self, buffer_id: int):
+        """Stop and cleanup stem"""
+        try:
+            self.sc_client.send_message("/stop_stem", [buffer_id])
+            self.playing_stems.discard(buffer_id)
+            self.loaded_buffers.discard(buffer_id)
+            print(f"⏹️  Stopped buffer {buffer_id}")
+        except Exception as e:
+            print(f"❌ Error stopping buffer {buffer_id}: {e}")
+    
+    def _set_stem_volume(self, stem_type: str, volume: float):
+        """Set volume for stem type across both decks"""
+        volume = max(0.0, min(1.0, volume))
+        self.stem_volumes[stem_type] = volume
+        
+        # Update all active stems of this type
+        for deck_stems in [self.deck_a_stems, self.deck_b_stems]:
+            if stem_type in deck_stems:
+                buffer_id = deck_stems[stem_type]['buffer_id']
+                try:
+                    self.sc_client.send_message("/stem_volume", [buffer_id, volume])
+                except Exception as e:
+                    print(f"❌ Error setting volume: {e}")
+        
+        print(f"🎚️  {stem_type.capitalize()} volume: {volume:.2f}")
+    
+    def _update_playback(self):
+        """Update crossfade and BPM for all playing stems"""
+        try:
+            # Update crossfade
+            deck_a_level = (1.0 - self.crossfade_position) * self.master_volume
+            deck_b_level = self.crossfade_position * self.master_volume
+            self.sc_client.send_message("/crossfade_levels", [deck_a_level, deck_b_level])
+            
+            # Update BPM for all playing stems (re-trigger playback)
+            for deck_stems in [self.deck_a_stems, self.deck_b_stems]:
+                for stem_type, stem_info in deck_stems.items():
+                    buffer_id = stem_info['buffer_id']
+                    song = stem_info['song']
+                    section = stem_info['section']
+                    self._smart_play_stem(buffer_id, song, stem_type, section)
+                    
+        except Exception as e:
+            print(f"❌ Error updating playback: {e}")
+    
+    def _show_status(self):
+        """Show current mixer and memory status"""
+        print("\\n🎛️🧠 SMART LOADING STEM MIXER STATUS")
+        print("=" * 50)
+        print(f"🎵 BPM: {self.current_bpm:.1f}")
+        print(f"🎚️  Crossfade: {self.crossfade_position:.2f}")
+        print(f"🔊 Master Volume: {self.master_volume:.2f}")
+        
+        print(f"\\n💾 Memory Status:")
+        print(f"  Loaded buffers: {len(self.loaded_buffers)}")
+        print(f"  Playing stems: {len(self.playing_stems)}")
+        
+        for deck_name, deck_stems in [("A", self.deck_a_stems), ("B", self.deck_b_stems)]:
+            print(f"\\n🎵 DECK {deck_name}:")
+            if deck_stems:
+                for stem_type, info in deck_stems.items():
+                    section_info = f" [{info['section']}]" if info['section'] else ""
+                    print(f"  {stem_type}: {info['song']['name']}{section_info} (buffer: {info['buffer_id']})")
+            else:
+                print("  (Empty)")
+        
+        print()
+    
+    def _show_memory_status(self):
+        """Request memory status from SuperCollider"""
+        try:
+            self.sc_client.send_message("/get_status", [])
+            print("📊 Requested memory status from SuperCollider")
+        except Exception as e:
+            print(f"❌ Error requesting status: {e}")
+    
+    def _cleanup_memory(self):
+        """Request memory cleanup from SuperCollider"""
+        try:
+            self.sc_client.send_message("/memory_cleanup", [])
+            print("🧹 Requested memory cleanup from SuperCollider")
+        except Exception as e:
+            print(f"❌ Error requesting cleanup: {e}")
+    
+    def _randomize_mix(self):
+        """Create random mix with smart loading"""
+        self.current_bpm = random.uniform(100, 150)
+        self.crossfade_position = random.uniform(0.0, 1.0)
+        
+        if len(self.available_songs) >= 2:
+            # Random stems from random songs
+            stems_to_load = random.sample(['bass', 'drums', 'vocals', 'piano', 'other'], 
+                                        random.randint(2, 4))
+            
+            for stem_type in stems_to_load:
+                song_a = random.randint(0, len(self.available_songs) - 1)
+                song_b = random.randint(0, len(self.available_songs) - 1)
+                
+                # Random sections if available
+                section_a = None
+                section_b = None
+                
+                if self.available_songs[song_a]['sections']:
+                    section_a = random.choice(self.available_songs[song_a]['sections'])['label']
+                
+                if self.available_songs[song_b]['sections']:
+                    section_b = random.choice(self.available_songs[song_b]['sections'])['label']
+                
+                self._load_individual_stem('A', song_a, stem_type, section_a)
+                self._load_individual_stem('B', song_b, stem_type, section_b)
+        
+        print(f"🎲 Random smart mix: BPM {self.current_bpm:.0f}")
+        self._update_playback()
+    
+    # OSC Handler methods
+    def handle_bpm_change(self, unused_addr, bpm: float):
+        bpm = max(60, min(200, bpm))
+        self.current_bpm = bpm
+        print(f"🎵 BPM: {bpm:.1f}")
+        self._update_playback()
+    
+    def handle_crossfade(self, unused_addr, position: float):
+        position = max(0.0, min(1.0, position))
+        self.crossfade_position = position
+        print(f"🎚️  Crossfade: {position:.2f}")
+        self._update_playback()
+    
+    def handle_master_volume(self, unused_addr, volume: float):
+        volume = max(0.0, min(1.0, volume))
+        self.master_volume = volume
+        print(f"🔊 Master Volume: {volume:.2f}")
+        self._update_playback()
+    
+    def handle_key_change(self, unused_addr, key: str):
+        self.current_key = key
+        print(f"🎹 Key: {key}")
+    
+    def _control_loop(self):
+        """Smart loading control loop"""
+        print("\\n💡 SMART LOADING COMMANDS:")
+        print("=== BASIC CONTROLS ===")
+        print("  bmp <value>           - Set BPM")
+        print("  cross <0-1>           - Crossfade")  
+        print("  songs                 - List songs")
+        print("  status                - Show status")
+        print("  memory                - Show SC memory status")
+        print("  cleanup               - Cleanup unused memory")
+        print("  quit                  - Exit")
+        print()
+        print("=== SMART STEM LOADING ===")
+        print("  a.<stem> <song>       - Load stem to deck A")
+        print("  b.<stem> <song>       - Load stem to deck B")
+        print("  a.<stem>.<section> <song> - Load stem + section to deck A")
+        print("  b.<stem>.<section> <song> - Load stem + section to deck B")
+        print("  Examples: a.bass 2, b.vocals.chorus 5")
+        print()
+        print("=== VOLUME CONTROLS ===")
+        print("  bass/drums/vocals/piano/other <0-1> - Set volume")
+        print()
+        print("=== OTHER ===")
+        print("  random                - Random smart mix")
+        print("  sections <song>       - Show sections for song")
+        print()
+        
+        while self.running:
+            try:
+                cmd = input("🎛️🧠 > ").strip().lower()
+                if not cmd:
+                    continue
+                    
+                parts = cmd.split()
+                command = parts[0]
+                
+                if command == "quit":
+                    break
+                elif command == "bpm" and len(parts) == 2:
+                    try:
+                        bpm = float(parts[1])
+                        self.handle_bpm_change(None, bpm)
+                    except ValueError:
+                        print("❌ Invalid BPM")
+                        
+                elif command == "cross" and len(parts) == 2:
+                    try:
+                        pos = float(parts[1])
+                        self.handle_crossfade(None, pos)
+                    except ValueError:
+                        print("❌ Invalid crossfade")
+                        
+                elif command == "status":
+                    self._show_status()
+                    
+                elif command == "memory":
+                    self._show_memory_status()
+                    
+                elif command == "cleanup":
+                    self._cleanup_memory()
+                    
+                elif command == "songs":
+                    print(f"\\n🎵 Available Songs ({len(self.available_songs)}):")
+                    for i, song in enumerate(self.available_songs):
+                        sections = len(song['sections'])
+                        print(f"  {i}: {song['name']} (BPM: {song['bpm']:.0f}, {sections} sections)")
+                    print()
+                    
+                elif command == "sections" and len(parts) == 2:
+                    try:
+                        song_idx = int(parts[1])
+                        if 0 <= song_idx < len(self.available_songs):
+                            song = self.available_songs[song_idx]
+                            print(f"\\n📊 Sections for {song['name']}:")
+                            for section in song['sections']:
+                                print(f"  {section['label']}: {section['start']:.1f}s - {section['end']:.1f}s")
+                            print()
+                        else:
+                            print("❌ Invalid song number")
+                    except ValueError:
+                        print("❌ Invalid song number")
+                
+                elif "." in command and len(parts) == 2:
+                    # Smart stem loading
+                    try:
+                        deck_parts = command.split(".")
+                        song_id = int(parts[1])
+                        
+                        if len(deck_parts) == 2:
+                            # Format: a.bass 2
+                            deck, stem = deck_parts
+                            self._load_individual_stem(deck.upper(), song_id, stem)
+                        elif len(deck_parts) == 3:
+                            # Format: a.bass.chorus 2
+                            deck, stem, section = deck_parts
+                            self._load_individual_stem(deck.upper(), song_id, stem, section)
+                    except ValueError:
+                        print("❌ Invalid command")
+                        
+                elif command in self.stem_volumes and len(parts) == 2:
+                    try:
+                        volume = float(parts[1])
+                        self._set_stem_volume(command, volume)
+                    except ValueError:
+                        print("❌ Invalid volume")
+                        
+                elif command == "random":
+                    self._randomize_mix()
+                    
+                else:
+                    print("❌ Unknown command")
+                    
+            except KeyboardInterrupt:
+                break
+            except Exception as e:
+                print(f"❌ Error: {e}")
+        
+        self.stop()
+    
+    def start(self):
+        """Start the smart mixer"""
+        print("🚀 Starting Smart Loading Stem Mixer...")
+        
+        # Test SuperCollider connection
+        try:
+            self.sc_client.send_message("/test_tone", [440, 0.5])
+            print("✅ SuperCollider connection test sent")
+        except Exception as e:
+            print(f"⚠️  Could not connect to SuperCollider: {e}")
+        
+        self.control_thread.start()
+        
+        try:
+            self.control_thread.join()
+        except KeyboardInterrupt:
+            self.stop()
+    
+    def stop(self):
+        """Stop and cleanup"""
+        print("\\n🛑 Stopping Smart Loading Mixer...")
+        self.running = False
+        
+        # Stop all playing stems
+        for buffer_id in list(self.playing_stems):
+            self._stop_stem(buffer_id)
+        
+        # Final cleanup
+        try:
+            self.sc_client.send_message("/mixer_cleanup", [])
+        except:
+            pass
+        
+        if self.osc_server:
+            self.osc_server.shutdown()
+        
+        print("👋 Smart mixer stopped!")
+
+def main():
+    mixer = SmartSuperColliderStemMixer()
+    mixer.start()
+
+if __name__ == "__main__":
+    print("Works with supercollider_audio_server_minimal.scd")
+    main()
