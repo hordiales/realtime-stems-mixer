@@ -21,7 +21,7 @@ echo ""
 
 # Start Python audio server in background
 echo "🚀 Starting Python Audio Server..."
-cd .. && python python_audio_server.py &
+cd .. && python audio_server.py &
 SERVER_PID=$!
 
 # Wait for server to start

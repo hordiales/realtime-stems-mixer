@@ -24,7 +24,7 @@ pip install numpy soundfile pyaudio python-osc
 
 1. **Start Audio Server:**
 ```bash
-python python_audio_server.py
+python audio_server.py
 ```
 
 2. **Run DJ Plan Executor:**
@@ -89,7 +89,7 @@ The Python server implements the exact same OSC messages as SuperCollider:
 
 ```bash
 # Test basic server functionality
-python test_python_audio_server.py
+python test_audio_server.py
 
 # Test with real audio files
 python run_python_dj.py remix_dramatic_example.json
@@ -103,7 +103,7 @@ python run_python_dj.py remix_dramatic_example.json
 python -c "import pyaudio; pa = pyaudio.PyAudio(); [print(f'{i}: {pa.get_device_info_by_index(i)[\"name\"]}') for i in range(pa.get_device_count())]; pa.terminate()"
 
 # Use specific device
-python python_audio_server.py --device 2
+python audio_server.py --device 2
 ```
 
 ### Permission Issues (macOS)
@@ -117,9 +117,9 @@ python python_audio_server.py --device 2
 
 ## Files
 
-- `python_audio_server.py` - Main audio server implementation
+- `audio_server.py` - Main audio server implementation
 - `run_python_dj.py` - Combined launcher script
-- `test_python_audio_server.py` - Basic functionality test
+- `test_audio_server.py` - Basic functionality test
 - `dj_plan_executor.py` - DJ plan executor (unchanged)
 - `remix_*.json` - Example DJ plans
 

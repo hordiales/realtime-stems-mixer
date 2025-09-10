@@ -2,7 +2,7 @@
 
 This document describes all OSC messages supported by both audio server options:
 - **SuperCollider Minimal Audio Server** (`supercollider_audio_server_minimal.scd`)
-- **Python Audio Server** (`python_audio_server.py`)
+- **Python Audio Server** (`audio_server.py`)
 
 ## 🎛️ **Server Configuration**
 

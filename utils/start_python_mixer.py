@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Python Audio Mixer Launcher
-Starts both python_audio_server.py and stem_mixer_smart.py in a coordinated way
+Starts both audio_server.py and stem_mixer_smart.py in a coordinated way
 """
 
 import subprocess
@@ -58,11 +58,11 @@ class PythonMixerLauncher:
         """Check that required files exist"""
         current_dir = Path(__file__).parent
         
-        audio_server_file = current_dir / "python_audio_server.py"
+        audio_server_file = current_dir / "audio_server.py"
         mixer_file = current_dir / "stem_mixer_smart.py"
         
         if not audio_server_file.exists():
-            print(f"❌ python_audio_server.py not found at {audio_server_file}")
+            print(f"❌ audio_server.py not found at {audio_server_file}")
             return False
             
         if not mixer_file.exists():
@@ -77,7 +77,7 @@ class PythonMixerLauncher:
         
         try:
             self.audio_server_process = subprocess.Popen(
-                [sys.executable, "python_audio_server.py"],
+                [sys.executable, "audio_server.py"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 universal_newlines=True,

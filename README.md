@@ -49,16 +49,36 @@ Eurovision/
 │   │   ├── piano.wav
 │   │   └── other.wav
 │   └── ...
-├── song-structures/                          # Song metadata and structure
+├── song-structures/                          # Song metadata and structure (38 songs)
 │   ├── 01-01 Zjerm....json                 # BPM, beats, segments
+│   ├── 01-11 Espresso Macchiato....json    # Eurovision 2025 songs
 │   └── ...
 ├── 🧠 stem_mixer_smart.py                  # ✅ SMART LOADING REAL-TIME MIXER
-├── 🎛️ supercollider_audio_server_minimal.scd # ✅ HIGH-QUALITY AUDIO SERVER
-├── 🐍 python_audio_server.py               # ✅ PYTHON AUDIO ENGINE (Alternative)
+├── 🐍 audio_server.py                      # ✅ PYTHON AUDIO ENGINE
 ├── 🚀 start_python_mixer.sh                # ✅ ONE-CLICK PYTHON MIXER LAUNCHER
-├── doc/SMART_STEM_MIXER_GUIDE.md               # Complete usage guide
-├── doc/OSC_MESSAGES_REFERENCE.md               # OSC protocol reference
-└── README.md                               # This file
+├── 📋 config_loader.py                     # Configuration management
+├── 🔧 mixer_config.json                    # Mixer settings
+├── supercollider-engine/                    # SuperCollider audio server option
+│   ├── supercollider_audio_server_minimal.scd # High-quality audio server
+│   └── run_audio_server.scd                # Server launcher
+├── autodj-plan/                             # Intelligent offline mixing
+│   ├── advanced_mixer.py                   # Music intelligence engine
+│   ├── demo_mixer.py                       # Demo plan generator
+│   ├── dj_plan_executor.py                 # Execute remix plans
+│   ├── start_python_dj.sh                  # Launch DJ system
+│   ├── remix_*.json                        # Example remix plans
+│   └── DJ_PLAN_EXECUTION_GUIDE.md          # DJ system guide
+├── docs/                                    # Complete documentation
+│   ├── SMART_STEM_MIXER_GUIDE.md           # Smart mixer usage
+│   ├── OSC_MESSAGES_REFERENCE.md           # OSC protocol reference
+│   ├── README_PYTHON_AUDIO.md              # Python audio engine docs
+│   └── SUPERCOLLIDER_MIXER_GUIDE.md        # SuperCollider guide
+├── tests/                                   # Testing framework
+│   ├── test_audio_server.py                # Audio server tests
+│   └── test_sc_direct.py                   # SuperCollider tests
+├── utils/                                   # Utility scripts
+│   ├── start_python_mixer.py               # Advanced Python launcher
+│   └── kill_servers.py                     # Server cleanup utility
 ```
 
 **IMPORTANT NOTE:** for a reliable stems separation use demucs/spleeter and for song structure [allinone](https://github.com/hordiales/all-in-one) (which also does stems split using demucs)
@@ -102,7 +122,7 @@ Then run: `python stem_mixer_smart.py`
 **Option B: Python Audio Engine (Manual)**
 ```bash
 # Terminal 1: Start Python audio server
-python python_audio_server.py
+python audio_server.py
 
 # Terminal 2: Run the mixer
 python stem_mixer_smart.py

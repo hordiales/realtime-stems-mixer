@@ -1,13 +1,13 @@
 #!/bin/bash
 # Python Audio Mixer Launcher - Shell Script Version
-# Starts both python_audio_server.py and stem_mixer_smart.py
+# Starts both audio_server.py and stem_mixer_smart.py
 
 echo "🚀 PYTHON AUDIO MIXER LAUNCHER 🚀"
 echo "========================================"
 
 # Check if files exist
-if [ ! -f "python_audio_server.py" ]; then
-    echo "❌ python_audio_server.py not found"
+if [ ! -f "audio_server.py" ]; then
+    echo "❌ audio_server.py not found"
     exit 1
 fi
 
@@ -33,7 +33,7 @@ trap cleanup SIGINT SIGTERM
 
 # Start audio server in background
 echo "🎛️💾 Starting Python Audio Server..."
-python python_audio_server.py &
+python audio_server.py &
 AUDIO_SERVER_PID=$!
 
 # Wait for audio server to initialize

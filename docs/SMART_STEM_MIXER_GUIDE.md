@@ -18,7 +18,7 @@ Wait for this message: `✅ Server booted successfully with minimal memory!`
 **Option B: Python Audio Server (Recommended)**
 ```bash
 # Start Python audio server (no SuperCollider required)
-python python_audio_server.py
+python audio_server.py
 ```
 Wait for: `🎛️💾 PYTHON AUDIO SERVER READY 💾🎛️`
 
