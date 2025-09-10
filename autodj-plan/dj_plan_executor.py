@@ -183,8 +183,8 @@ class DJPlanExecutor:
                 
             # Match SuperCollider OSC message format exactly:
             # /play_stem [bufferID, rate, volume, loop, startPos]
-            # Wait a bit to ensure buffer is loaded
-            time.sleep(0.3)
+            # Wait to ensure buffer is loaded, but not too long
+            time.sleep(0.5)
             
             message_params = [
                 int(buffer_id),  # Ensure integer
@@ -195,7 +195,19 @@ class DJPlanExecutor:
             ]
             
             print(f"🎵 Sending OSC: /play_stem {message_params}")
-            self.sc_client.send_message("/play_stem", message_params)
+            
+            # Send message with retry logic to handle SuperCollider timing issues
+            max_retries = 3
+            for attempt in range(max_retries):
+                try:
+                    self.sc_client.send_message("/play_stem", message_params)
+                    break  # Success, exit retry loop
+                except Exception as e:
+                    if attempt < max_retries - 1:
+                        print(f"⚠️  OSC send attempt {attempt + 1} failed, retrying...")
+                        time.sleep(0.5)
+                    else:
+                        raise e
             
             song_name = stem_info['song'].split('(')[0].strip()
             rate_info = f"(rate: {rate:.3f})" if rate != 1.0 else ""
@@ -255,7 +267,7 @@ class DJPlanExecutor:
                 stem_volume = 0.9  # Vocals prominent
             
             self._play_stem_buffer(buffer_id, stem_info, stem_volume)
-            time.sleep(0.2)  # Slightly longer delay for stability
+            time.sleep(0.2)  # Small delay between stems
         
         # Set initial crossfade (deck A active for stems below 1100, deck B for above)
         try:
@@ -272,6 +284,17 @@ class DJPlanExecutor:
             print(f"⚠️  Crossfade error: {e}")
         
         print(f"✅ Section started with {len(active_buffers)} stems")
+        
+        # Show what buffers are now active
+        active_buffer_ids = [buf_id for buf_id, _ in active_buffers]
+        print(f"📊 Active buffer IDs: {active_buffer_ids}")
+        
+        # Send a status check to see what SuperCollider reports
+        try:
+            self.sc_client.send_message("/get_status", [])
+            print("📡 Sent status request to SuperCollider")
+        except Exception as e:
+            print(f"⚠️  Status request failed: {e}")
         
         # Auto-advance to next section after actual duration
         if auto_advance:

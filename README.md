@@ -1,6 +1,11 @@
 # Eurovision Music Mixing Engine 🎵
 
-A sophisticated **real-time** music mixing engine that combines stems from different Eurovision songs. Features both intelligent offline planning and **live SuperCollider-based mixing** with smart memory management
+A sophisticated **real-time** music mixing engine that combines stems from different Eurovision songs. Features both intelligent offline planning and **live SuperCollider-based mixing** with smart memory management.
+
+
+Eurovision live dj stems mix with Crowdstream (livecoding session):
+https://youtu.be/1cXhiNixB_o
+
 
 ## 🚀 **Latest Features - SuperCollider Integration**
 
@@ -47,8 +52,8 @@ Eurovision/
 │   └── ...
 ├── 🧠 supercollider_stem_mixer_smart.py    # ✅ SMART LOADING REAL-TIME MIXER
 ├── 🎛️ supercollider_audio_server_minimal.scd # ✅ HIGH-QUALITY AUDIO SERVER
-├── SMART_STEM_MIXER_GUIDE.md               # Complete usage guide
-├── OSC_MESSAGES_REFERENCE.md               # OSC protocol reference
+├── doc/SMART_STEM_MIXER_GUIDE.md               # Complete usage guide
+├── doc/OSC_MESSAGES_REFERENCE.md               # OSC protocol reference
 └── README.md                               # This file
 ```
 
