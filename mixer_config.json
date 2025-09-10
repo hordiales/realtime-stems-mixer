@@ -1,0 +1,41 @@
+{
+  "audio": {
+    "sample_rate": 441000,
+    "chunk_size": 512,
+    "enable_pitch_shifting": false,
+    "enable_time_stretching": false,
+    "time_stretch_threshold": 0.05,
+    "max_pitch_shift_semitones": 0,
+    "soft_limiting": true,
+    "master_volume": 0.8
+  },
+  "mixing": {
+    "crossfade_time": 4.0,
+    "auto_normalize": true,
+    "stem_volumes": {
+      "bass": 0.8,
+      "drums": 0.9,
+      "vocals": 0.8,
+      "piano": 0.7,
+      "other": 0.6
+    },
+    "bpm_tolerance_percent": 15.0,
+    "enable_bpm_matching": true
+  },
+  "osc": {
+    "port": 5005,
+    "host": "localhost",
+    "enable_osc": true
+  },
+  "performance": {
+    "high_quality_time_stretch": true,
+    "hop_length": 256,
+    "enable_audio_effects": true,
+    "low_latency_mode": false
+  },
+  "ui": {
+    "show_debug_info": false,
+    "auto_start_demo": false,
+    "cli_enabled": true
+  }
+}
