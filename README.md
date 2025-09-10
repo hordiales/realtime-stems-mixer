@@ -20,12 +20,6 @@ Check the full [CrowdStream](https://timmd-9216.github.io/crowdstream/) project 
 
 ## Features
 
-### 🎼 Musical Intelligence
-- **BPM Matching**: Compatible songs within 5-15% BPM tolerance
-- **Key Compatibility**: Uses Camelot Wheel system for harmonic mixing
-- **Music Theory**: Supports relative major/minor keys and perfect fifths
-- **Automatic Key Estimation**: Based on BPM and song characteristics
-
 ### 🎛️ Mixing Capabilities
 - **Stem Separation**: Works with bass, drums, vocals, piano, and other stems
 - **Song Structure Analysis**: Understands verse, chorus, bridge, intro, outro sections  
