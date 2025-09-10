@@ -1,11 +1,13 @@
 # Eurovision Music Mixing Engine 🎵
 
-A sophisticated **real-time** music mixing engine that combines stems from different Eurovision songs. Features both intelligent offline planning and **live SuperCollider-based mixing** with smart memory management.
+A **real-time** music mixing engine that combines stems from different Eurovision songs. Features both intelligent offline planning and **live SuperCollider-based mixing** with smart memory management.
 
-
-Eurovision live dj stems mix with Crowdstream (livecoding session):
+***
+Demo: Livecoding session, mixing stems from different songs:
 https://youtu.be/1cXhiNixB_o
+***
 
+Check the full [CrowdStream](https://timmd-9216.github.io/crowdstream/) project for another experimental uses and details.
 
 ## 🚀 **Latest Features - SuperCollider Integration**
 
