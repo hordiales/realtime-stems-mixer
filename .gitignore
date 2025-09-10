@@ -1,3 +1,5 @@
 ./song-structures/*
 ./stems/*
-
+stems
+*.json
+__pycache__/

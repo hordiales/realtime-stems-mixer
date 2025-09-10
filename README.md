@@ -1,6 +1,15 @@
 # Eurovision Music Mixing Engine 🎵
 
-A sophisticated real-time music mixing engine that combines stems from different Eurovision songs based on BPM compatibility, key harmony, and musical structure using the Camelot Wheel system.
+A sophisticated **real-time** music mixing engine that combines stems from different Eurovision songs. Features both intelligent offline planning and **live SuperCollider-based mixing** with smart memory management
+
+## 🚀 **Latest Features - SuperCollider Integration**
+
+- **Real-Time Audio Mixing**: Live stem playback via SuperCollider audio server
+- **Smart Memory Loading**: Only loads stems when playing (optimized for 16GB RAM)
+- **Individual Stem Control**: Mix bass from one song with drums from another
+- **Section-Based Playback**: Play specific sections (verse, chorus, bridge, etc.)
+- **High-Quality Audio**: 44.1kHz matching, no resampling degradation
+- **OSC Control**: External control via OSC messages
 
 ## Features
 
@@ -25,7 +34,7 @@ A sophisticated real-time music mixing engine that combines stems from different
 
 ```
 Eurovision/
-├── stems/                          # Individual song stem directories
+├── stems/                                    # Individual song stem directories
 │   ├── 01-01 Zjerm.../
 │   │   ├── bass.wav
 │   │   ├── drums.wav
@@ -33,13 +42,14 @@ Eurovision/
 │   │   ├── piano.wav
 │   │   └── other.wav
 │   └── ...
-├── song-structures/                # Song metadata and structure
-│   ├── 01-01 Zjerm....json        # BPM, beats, segments
+├── song-structures/                          # Song metadata and structure
+│   ├── 01-01 Zjerm....json                 # BPM, beats, segments
 │   └── ...
-├── music_mixer.py                  # Basic mixing engine
-├── advanced_mixer.py              # Advanced engine with key detection
-├── demo_mixer.py                  # Demo script and examples
-└── README.md                      # This file
+├── 🧠 supercollider_stem_mixer_smart.py    # ✅ SMART LOADING REAL-TIME MIXER
+├── 🎛️ supercollider_audio_server_minimal.scd # ✅ HIGH-QUALITY AUDIO SERVER
+├── SMART_STEM_MIXER_GUIDE.md               # Complete usage guide
+├── OSC_MESSAGES_REFERENCE.md               # OSC protocol reference
+└── README.md                               # This file
 ```
 
 ## Song Database
@@ -60,7 +70,34 @@ The engine currently includes **11 Eurovision 2025 songs** with BPMs ranging fro
 
 ## Usage
 
-### Basic Usage
+### 🎛️ **Real-Time Smart Mixer (Recommended)**
+
+**1. Start SuperCollider Audio Server:**
+```supercollider
+// In SuperCollider IDE:
+s.quit; s.reboot;  // Clean restart
+"supercollider_audio_server_minimal.scd".loadRelative;
+```
+
+**2. Run Smart Mixer:**
+```bash
+python supercollider_stem_mixer_smart.py
+```
+
+**3. Live Mixing Commands:**
+```bash
+🎛️🧠 > songs                    # List available songs
+🎛️🧠 > a.bass 2                # Load bass from song 2 to deck A
+🎛️🧠 > b.vocals.chorus 5       # Load vocals from chorus of song 5 to deck B
+🎛️🧠 > bpm 128                 # Set BPM to 128
+🎛️🧠 > cross 0.5               # 50/50 crossfade between decks
+🎛️🧠 > bass 0.8                # Set bass volume to 80%
+🎛️🧠 > random                  # Generate random creative mix
+```
+
+**See [`SMART_STEM_MIXER_GUIDE.md`](SMART_STEM_MIXER_GUIDE.md) for complete documentation.**
+
+### 🤖 **Intelligent Offline Planning**
 ```python
 from advanced_mixer import AdvancedMusicMixer
 
@@ -72,7 +109,7 @@ remix = mixer.create_intelligent_remix("energetic")
 mixer.print_advanced_remix_plan(remix)
 ```
 
-### Quick Demo
+### 🎵 **Quick Demo**
 ```bash
 python demo_mixer.py
 ```
@@ -157,20 +194,29 @@ Section Details:
 
 ## Advanced Features
 
-### Key Detection
-- Automatic key estimation based on BPM and musical characteristics
-- Eurovision-specific key mapping for dance/pop songs
-- Harmonic compatibility analysis
+### 🧠 **Smart Loading System**
+- **Memory Efficient**: Only loads stems when actually playing
+- **Automatic Cleanup**: Frees unused buffers automatically
+- **16GB Optimized**: Perfect for systems with limited RAM
+- **Buffer Management**: Smart allocation and deallocation
 
-### Real-time Capabilities  
-- Efficient stem file detection
-- Fast compatibility calculations
-- Optimized for live performance use
+### 🎛️ **Real-Time Audio Engine**
+- **High-Quality**: 44.1kHz native, no resampling degradation  
+- **Low Latency**: 256-sample blocks for responsive control
+- **Individual Control**: Each stem controllable independently
+- **Section Playback**: Jump to specific song sections (verse, chorus, etc.)
 
-### Export Options
-- JSON remix plans for external audio software
-- Detailed technical specifications for each stem
-- Time-stretching and pitch-shift information
+### 🎵 **Musical Intelligence**
+- **BPM Sync**: Automatic tempo matching across stems
+- **Key Detection**: Eurovision-specific key mapping
+- **Structure Analysis**: Understands song sections and timing
+- **Harmonic Mixing**: Camelot Wheel compatibility
+
+### 📡 **OSC Integration**
+- **External Control**: Full OSC message support
+- **Real-Time**: Instant parameter changes
+- **Automation Ready**: Perfect for live performance
+- **Protocol Documentation**: Complete OSC reference available
 
 ## Next Steps
 
@@ -191,10 +237,22 @@ Section Details:
 
 ## Requirements
 
-- Python 3.7+
-- JSON support (built-in)
-- Audio files in WAV format
-- Song structure metadata in JSON format
+### 🧠 **Smart Real-Time Mixer**
+- **SuperCollider** 3.12+ (audio server)
+- **Python 3.7+** with dependencies:
+  - `pythonosc` - OSC communication
+  - `pathlib` - File handling
+  - `json` - Configuration
+- **Audio Files**: WAV format, 44.1kHz stereo preferred
+- **Memory**: 16GB+ RAM recommended
+- **Song Structures**: JSON metadata files
+
+### 📦 **Installation**
+```bash
+# Install SuperCollider from: https://supercollider.github.io/
+# Install Python dependencies:
+pip install python-osc pathlib
+```
 
 ## Contributing
 

@@ -20,7 +20,7 @@ Wait for this message: `✅ Server booted successfully with minimal memory!`
 ### 2. Run the Smart Mixer
 
 ```bash
-/Users/hordia/miniconda3/envs/UBA-crowdstream/bin/python supercollider_stem_mixer_smart.py
+python supercollider_stem_mixer_smart.py
 ```
 
 ## 🎛️ Command Interface
