@@ -1,26 +1,31 @@
-# 🧠 Smart Loading SuperCollider Stem Mixer Guide
+# 🧠 Smart Loading Stem Mixer Guide
 
 ## Overview
 
-The Smart Loading SuperCollider Stem Mixer (`supercollider_stem_mixer_smart.py`) is an intelligent real-time audio mixing system designed for Eurovision song stems. It uses **smart loading** to only load audio stems when they're actually playing, making it perfect for systems with memory constraints (like your 16GB system).
+The Smart Loading Stem Mixer (`stem_mixer_smart.py`) is an intelligent real-time audio mixing system designed for Eurovision song stems. It uses **smart loading** to only load audio stems when they're actually playing, making it perfect for systems with memory constraints (like your 16GB system).
 
 ## 🚀 Quick Start
 
-### 1. Start SuperCollider Audio Server
+### 1. Start Audio Server
 
-First, start the minimal memory SuperCollider server:
-
+**Option A: SuperCollider Audio Server**
 ```supercollider
 // In SuperCollider IDE
 "supercollider_audio_server_minimal.scd".loadRelative;
 ```
-
 Wait for this message: `✅ Server booted successfully with minimal memory!`
+
+**Option B: Python Audio Server (Recommended)**
+```bash
+# Start Python audio server (no SuperCollider required)
+python python_audio_server.py
+```
+Wait for: `🎛️💾 PYTHON AUDIO SERVER READY 💾🎛️`
 
 ### 2. Run the Smart Mixer
 
 ```bash
-python supercollider_stem_mixer_smart.py
+python stem_mixer_smart.py
 ```
 
 ## 🎛️ Command Interface

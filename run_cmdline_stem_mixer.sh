@@ -1,2 +1,2 @@
-python supercollider_stem_mixer_smart.py
+python stem_mixer_smart.py
 

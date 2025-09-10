@@ -1,6 +1,8 @@
-# 📡 OSC Messages Reference - SuperCollider Audio Server
+# 📡 OSC Messages Reference - Audio Servers
 
-This document describes all OSC messages supported by the **SuperCollider Minimal Audio Server** (`supercollider_audio_server_minimal.scd`).
+This document describes all OSC messages supported by both audio server options:
+- **SuperCollider Minimal Audio Server** (`supercollider_audio_server_minimal.scd`)
+- **Python Audio Server** (`python_audio_server.py`)
 
 ## 🎛️ **Server Configuration**
 
@@ -261,7 +263,7 @@ CPU: 12.5%
 
 ## 🚀 **Integration with Python Mixer**
 
-The **Smart SuperCollider Stem Mixer** (`supercollider_stem_mixer_smart.py`) automatically sends these OSC messages based on user commands:
+The **Smart Stem Mixer** (`stem_mixer_smart.py`) automatically sends these OSC messages based on user commands:
 
 | Mixer Command | OSC Message | Purpose |
 |---------------|-------------|---------|

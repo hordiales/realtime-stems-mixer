@@ -52,8 +52,10 @@ Eurovision/
 ├── song-structures/                          # Song metadata and structure
 │   ├── 01-01 Zjerm....json                 # BPM, beats, segments
 │   └── ...
-├── 🧠 supercollider_stem_mixer_smart.py    # ✅ SMART LOADING REAL-TIME MIXER
+├── 🧠 stem_mixer_smart.py                  # ✅ SMART LOADING REAL-TIME MIXER
 ├── 🎛️ supercollider_audio_server_minimal.scd # ✅ HIGH-QUALITY AUDIO SERVER
+├── 🐍 python_audio_server.py               # ✅ PYTHON AUDIO ENGINE (Alternative)
+├── 🚀 start_python_mixer.sh                # ✅ ONE-CLICK PYTHON MIXER LAUNCHER
 ├── doc/SMART_STEM_MIXER_GUIDE.md               # Complete usage guide
 ├── doc/OSC_MESSAGES_REFERENCE.md               # OSC protocol reference
 └── README.md                               # This file
@@ -81,19 +83,32 @@ The engine currently includes **11 Eurovision 2025 songs** with BPMs ranging fro
 
 ### 🎛️ **Real-Time Smart Mixer (Recommended)**
 
-**1. Start SuperCollider Audio Server:**
+**🚀 One-Click Python Mixer (Easiest):**
+```bash
+./start_python_mixer.sh
+```
+*Automatically starts both Python audio server and stem mixer*
+
+**Manual Setup Options:**
+
+**Option A: SuperCollider Audio Server**
 ```supercollider
 // In SuperCollider IDE:
 s.quit; s.reboot;  // Clean restart
 "supercollider_audio_server_minimal.scd".loadRelative;
 ```
+Then run: `python stem_mixer_smart.py`
 
-**2. Run Smart Mixer:**
+**Option B: Python Audio Engine (Manual)**
 ```bash
-python supercollider_stem_mixer_smart.py
+# Terminal 1: Start Python audio server
+python python_audio_server.py
+
+# Terminal 2: Run the mixer
+python stem_mixer_smart.py
 ```
 
-**3. Live Mixing Commands:**
+**Live Mixing Commands:**
 ```bash
 🎛️🧠 > songs                    # List available songs
 🎛️🧠 > a.bass 2                # Load bass from song 2 to deck A
@@ -247,20 +262,39 @@ Section Details:
 ## Requirements
 
 ### 🧠 **Smart Real-Time Mixer**
+
+**Option 1: SuperCollider Audio Engine**
 - **SuperCollider** 3.12+ (audio server)
 - **Python 3.7+** with dependencies:
   - `pythonosc` - OSC communication
   - `pathlib` - File handling
   - `json` - Configuration
+
+**Option 2: Python Audio Engine (Recommended)**
+- **Python 3.7+** with dependencies:
+  - `pythonosc` - OSC communication
+  - `soundfile` - Audio file reading
+  - `pyaudio` - Real-time audio playback
+  - `numpy` - Audio processing
+
+**Common Requirements:**
 - **Audio Files**: WAV format, 44.1kHz stereo preferred
 - **Memory**: 16GB+ RAM recommended
 - **Song Structures**: JSON metadata files
 
 ### 📦 **Installation**
+
+**Option 1: SuperCollider Setup**
 ```bash
 # Install SuperCollider from: https://supercollider.github.io/
 # Install Python dependencies:
 pip install python-osc pathlib
+```
+
+**Option 2: Python Audio Engine Setup (Recommended)**
+```bash
+# Install Python dependencies:
+pip install python-osc soundfile pyaudio numpy
 ```
 
 ## Contributing

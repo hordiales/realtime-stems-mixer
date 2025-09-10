@@ -194,6 +194,14 @@ class SmartSuperColliderStemMixer:
                 stem_name
             ])
             
+            # Wait for buffer to load - longer wait for first buffer
+            if buffer_id == 1000:
+                time.sleep(2.0)  # Extra time for first buffer to avoid race condition
+                # needed by python realtime engine (not in supercollider)
+                print(f"⏳ Extra wait for first buffer {buffer_id}")
+            else:
+                time.sleep(1.0)  # Standard wait for subsequent buffers
+            
             self.loaded_buffers.add(buffer_id)
             
             section_info = f" [{section}]" if section else ""
@@ -221,14 +229,31 @@ class SmartSuperColliderStemMixer:
                         start_pos = sect['start']
                         break
             
-            # Send play command
-            self.sc_client.send_message("/play_stem", [
-                buffer_id,
-                playback_rate,
-                volume,
+            # Validate buffer ID before playing
+            if not isinstance(buffer_id, int) or buffer_id < 1000:
+                print(f"❌ Invalid buffer ID: {buffer_id}")
+                return
+            
+            # Send play command with retry logic
+            message_params = [
+                int(buffer_id),
+                float(playback_rate),
+                float(volume),
                 1,  # loop
-                start_pos
-            ])
+                float(start_pos)
+            ]
+            
+            max_retries = 3
+            for attempt in range(max_retries):
+                try:
+                    self.sc_client.send_message("/play_stem", message_params)
+                    break  # Success, exit retry loop
+                except Exception as e:
+                    if attempt < max_retries - 1:
+                        print(f"⚠️  OSC send attempt {attempt + 1} failed, retrying...")
+                        time.sleep(0.5)
+                    else:
+                        raise e
             
             self.playing_stems.add(buffer_id)
             
@@ -542,19 +567,22 @@ class SmartSuperColliderStemMixer:
             self.stop()
     
     def stop(self):
-        """Stop and cleanup"""
+        """Stop and cleanup - similar to dj_plan_executor.py approach"""
         print("\\n🛑 Stopping Smart Loading Mixer...")
         self.running = False
         
-        # Stop all playing stems
-        for buffer_id in list(self.playing_stems):
-            self._stop_stem(buffer_id)
-        
-        # Final cleanup
+        # Stop all audio and free memory (like dj_plan_executor.py)
         try:
             self.sc_client.send_message("/mixer_cleanup", [])
-        except:
-            pass
+            print("⏹️  Stopped all audio and freed memory")
+        except Exception as e:
+            print(f"❌ Error stopping: {e}")
+        
+        # Clear our tracking (like dj_plan_executor.py clears loaded_buffers)
+        self.playing_stems.clear()
+        self.loaded_buffers.clear()
+        self.deck_a_stems.clear()
+        self.deck_b_stems.clear()
         
         if self.osc_server:
             self.osc_server.shutdown()
