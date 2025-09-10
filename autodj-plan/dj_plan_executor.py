@@ -43,10 +43,16 @@ class DJPlanExecutor:
         print(f"🎧🎛️ DJ Plan Executor initialized")
         print(f"🔌 SuperCollider: {sc_host}:{sc_port}")
         
-        # Test connection
+        # Test connection and initialize SuperCollider
         try:
             self.sc_client.send_message("/test_tone", [440])
             print("✅ SuperCollider connection test sent")
+            
+            # Wait a moment, then send status to ensure server is ready
+            time.sleep(1.0)
+            self.sc_client.send_message("/get_status", [])
+            print("📊 Requested initial status from SuperCollider")
+            
         except Exception as e:
             print(f"⚠️  Could not test SuperCollider connection: {e}")
     
@@ -183,8 +189,12 @@ class DJPlanExecutor:
                 
             # Match SuperCollider OSC message format exactly:
             # /play_stem [bufferID, rate, volume, loop, startPos]
-            # Wait to ensure buffer is loaded, but not too long
-            time.sleep(0.5)
+            # Wait to ensure buffer is loaded, with longer wait for first buffer
+            if buffer_id == 1000:
+                time.sleep(1.5)  # Extra time for first buffer to avoid race condition
+                print(f"⏳ Extra wait for first buffer {buffer_id}")
+            else:
+                time.sleep(0.5)
             
             message_params = [
                 int(buffer_id),  # Ensure integer
