@@ -9,14 +9,16 @@ https://youtu.be/1cXhiNixB_o
 
 Check the full [CrowdStream](https://timmd-9216.github.io/crowdstream/) project for another experimental uses and details.
 
-## 🚀 **Latest Features - SuperCollider Integration**
+## 🚀 **Latest Features - Interactive TSP AutoDJ with Real-time Stem Swapping**
 
-- **Real-Time Audio Mixing**: Live stem playback via SuperCollider audio server
+- **TSP Song Optimization**: Traveling Salesman Problem finds optimal song order using Camelot wheel + BPM compatibility
+- **Real-Time Stem Swapping**: Live replacement of individual instruments during playback with automatic key/BPM adjustment
+- **Country-Based Stem Selection**: Use country names as identifiers - `swap bass albania`, `swap drums croatia`
+- **Interactive Command Line**: Live control while music plays - change any stem from any Eurovision country
+- **Automatic Harmonic Mixing**: Pitch shifting and time stretching for seamless stem compatibility
 - **Smart Memory Loading**: Only loads stems when playing (optimized for 16GB RAM)
-- **Individual Stem Control**: Mix bass from one song with drums from another
-- **Section-Based Playback**: Play specific sections (verse, chorus, bridge, etc.)
-- **High-Quality Audio**: 44.1kHz matching, no resampling degradation
-- **OSC Control**: External control via OSC messages
+- **Camelot Wheel Integration**: Professional DJ-style harmonic mixing with Eurovision song database
+- **High-Quality Audio**: 44.1kHz native, no resampling degradation
 
 ## Features
 
@@ -47,6 +49,9 @@ Eurovision/
 │   ├── 01-01 Zjerm....json                 # BPM, beats, segments
 │   ├── 01-11 Espresso Macchiato....json    # Eurovision 2025 songs
 │   └── ...
+├── 🎯 tsp_autodj.py                        # ✅ TSP SONG OPTIMIZER & ANALYZER  
+├── 🎛️ interactive_tsp_mixer.py             # ✅ INTERACTIVE STEM SWAPPING MIXER
+├── 🎮 interactive_mixer_demo.py            # ✅ DEMO OF COUNTRY-BASED STEM SWAPPING
 ├── 🧠 stem_mixer_smart.py                  # ✅ SMART LOADING REAL-TIME MIXER
 ├── 🐍 audio_server.py                      # ✅ PYTHON AUDIO ENGINE
 ├── 🚀 start_python_mixer.sh                # ✅ ONE-CLICK PYTHON MIXER LAUNCHER
@@ -95,31 +100,57 @@ The engine currently includes **11 Eurovision 2025 songs** with BPMs ranging fro
 
 ## Usage
 
-### 🎛️ **Real-Time Smart Mixer (Recommended)**
+### 🎯 **Interactive TSP AutoDJ with Country-Based Stem Swapping (NEW!)**
 
-**🚀 One-Click Python Mixer (Easiest):**
+**🎮 Quick Start with Demo:**
+```bash
+python interactive_mixer_demo.py
+```
+
+**🎛️ Real-Time Country-Based Stem Commands:**
+```bash
+# Start the interactive TSP mixer
+python interactive_tsp_mixer.py
+
+# In the interactive CLI:
+play                          # Start TSP-optimized song tour
+swap bass albania             # Replace current bass with Albania's bass stem
+swap drums croatia            # Use Croatia's drums (auto-adjusted for key/BPM)
+swap vocals denmark           # Use Denmark's vocals with harmonic matching
+swap piano estonia            # Use Estonia's piano part
+find vocals 4A 120            # Find vocals compatible with key 4A @ 120 BPM
+volume drums 1.5              # Set drums volume to 150%
+mute vocals                   # Mute vocals from any country
+status                        # Show current mix status
+list songs                    # Show all Eurovision countries
+quit                          # Exit mixer
+```
+
+**🌍 Country-Based Stem Selection:**
+- **albania, armenia, australia, austria, azerbaijan** - Use any country name
+- **belgium, croatia, cyprus, czechia, denmark, estonia** - Partial names work too
+- **Automatic Key/BPM Matching** - System automatically pitch shifts and time stretches
+- **Real-Time Swapping** - Change stems while music is playing
+- **Camelot Wheel Compatibility** - Professional harmonic mixing
+
+**🎵 Example Creative Mixes:**
+```bash
+# Create a Eurovision mega-mix:
+swap bass albania             # Albanian bass foundation
+swap drums croatia            # Croatian percussion drive  
+swap vocals denmark           # Danish vocal melody
+swap piano estonia            # Estonian harmonic textures
+
+# Find compatible alternatives:
+find bass 8A                  # Find bass stems in key 8A
+find drums 130                # Find drums around 130 BPM
+```
+
+### 🎛️ **Classic Real-Time Smart Mixer**
+
+**🚀 One-Click Python Mixer:**
 ```bash
 ./start_python_mixer.sh
-```
-*Automatically starts both Python audio server and stem mixer*
-
-**Manual Setup Options:**
-
-**Option A: SuperCollider Audio Server**
-```supercollider
-// In SuperCollider IDE:
-s.quit; s.reboot;  // Clean restart
-"supercollider_audio_server_minimal.scd".loadRelative;
-```
-Then run: `python stem_mixer_smart.py`
-
-**Option B: Python Audio Engine (Manual)**
-```bash
-# Terminal 1: Start Python audio server
-python audio_server.py
-
-# Terminal 2: Run the mixer
-python stem_mixer_smart.py
 ```
 
 **Live Mixing Commands:**
@@ -133,7 +164,17 @@ python stem_mixer_smart.py
 🎛️🧠 > random                  # Generate random creative mix
 ```
 
-**See [`SMART_STEM_MIXER_GUIDE.md`](SMART_STEM_MIXER_GUIDE.md) for complete documentation.**
+### 🎯 **TSP Song Optimization (Standalone)**
+```bash
+# Analyze all Eurovision songs and find optimal tour
+python tsp_autodj.py
+
+# Shows optimal song order considering:
+# - Camelot wheel harmonic compatibility  
+# - BPM mixing compatibility
+# - Energy flow optimization
+# - Traveling Salesman Problem solution
+```
 
 ### 🤖 **Intelligent Offline Planning**
 ```python
@@ -232,6 +273,16 @@ Section Details:
 
 ## Advanced Features
 
+### 🎯 **TSP AutoDJ with Country-Based Stem Swapping**
+- **Traveling Salesman Optimization**: Finds mathematically optimal song order through entire Eurovision catalog
+- **Camelot Wheel Integration**: Professional harmonic mixing using circle of fifths + major/minor relationships  
+- **Country Name Stem Selection**: Use intuitive country names - `albania`, `croatia`, `denmark`, etc.
+- **Real-Time Key Adjustment**: Automatic pitch shifting for harmonic compatibility between different countries
+- **BPM Synchronization**: Time stretching to match tempos across different Eurovision songs
+- **Interactive CLI**: Live stem swapping while music plays - create unique Eurovision mega-mixes
+- **Compatibility Finder**: Smart suggestions for stems that work well together
+- **Professional Crossfading**: 4-second intelligent crossfades based on harmonic compatibility
+
 ### 🧠 **Smart Loading System**
 - **Memory Efficient**: Only loads stems when actually playing
 - **Automatic Cleanup**: Frees unused buffers automatically
@@ -246,9 +297,10 @@ Section Details:
 
 ### 🎵 **Musical Intelligence**
 - **BPM Sync**: Automatic tempo matching across stems
-- **Key Detection**: Eurovision-specific key mapping
+- **Key Detection**: Eurovision-specific key mapping with Camelot notation
 - **Structure Analysis**: Understands song sections and timing
-- **Harmonic Mixing**: Camelot Wheel compatibility
+- **Harmonic Mixing**: Professional DJ-style Camelot Wheel compatibility
+- **TSP Optimization**: Mathematical approach to optimal song ordering
 
 ### 📡 **OSC Integration**
 - **External Control**: Full OSC message support
