@@ -30,7 +30,9 @@ class SmartSuperColliderStemMixer:
         # SuperCollider OSC client
         self.sc_host = sc_host
         self.sc_port = sc_port
-        self.sc_client = udp_client.SimpleUDPClient(sc_host, sc_port)
+        # Force IPv4 to match audio server
+        sc_host_ipv4 = "127.0.0.1" if sc_host == "localhost" else sc_host
+        self.sc_client = udp_client.SimpleUDPClient(sc_host_ipv4, sc_port)
         
         # Directories
         self.stems_dir = Path(stems_dir)
@@ -80,6 +82,59 @@ class SmartSuperColliderStemMixer:
         print(f"📡 OSC Control: localhost:{osc_port}")
         print("💡 Smart Loading: Only loads stems when playing")
         
+    def _extract_country_name(self, song_name: str) -> str:
+        """Extract country name from Eurovision song title"""
+        # Common Eurovision patterns: "01-01 Title (Eurovision 2025 - Country)"
+        if '(' in song_name and ')' in song_name:
+            paren_content = song_name.split('(')[-1].split(')')[0]
+            if '-' in paren_content:
+                country = paren_content.split('-')[-1].strip()
+                return country.lower()
+        
+        # Fallback patterns
+        for delimiter in ['-', '(', ')']:
+            if delimiter in song_name:
+                parts = song_name.replace('(', ' ').replace(')', ' ').replace('-', ' ').split()
+                # Look for country names in common positions
+                for part in reversed(parts):  # Check from end first
+                    clean_part = part.strip().lower()
+                    if len(clean_part) > 3 and clean_part.isalpha():
+                        return clean_part
+        
+        return song_name.lower()
+    
+    def _find_song_by_identifier(self, identifier: str) -> Optional[int]:
+        """Find song by country name or numerical ID"""
+        # Try numerical ID first
+        try:
+            song_id = int(identifier)
+            if 0 <= song_id < len(self.available_songs):
+                return song_id
+        except ValueError:
+            pass
+        
+        # Try country name matching
+        identifier_lower = identifier.lower().strip()
+        
+        # First pass: exact country name match
+        for i, song in enumerate(self.available_songs):
+            country = self._extract_country_name(song['name'])
+            if country == identifier_lower:
+                return i
+        
+        # Second pass: partial country name match
+        for i, song in enumerate(self.available_songs):
+            country = self._extract_country_name(song['name'])
+            if identifier_lower in country or country.startswith(identifier_lower):
+                return i
+        
+        # Third pass: check if identifier appears anywhere in song name
+        for i, song in enumerate(self.available_songs):
+            if identifier_lower in song['name'].lower():
+                return i
+        
+        return None
+    
     def _load_song_info(self):
         """Load song and structure information (metadata only)"""
         # Load structure JSON files
@@ -127,9 +182,13 @@ class SmartSuperColliderStemMixer:
                         bpm = structure['bpm'] if structure else 120.0
                         sections = structure['sections'] if structure else []
                         
+                        # Extract country name for easy identification
+                        country_name = self._extract_country_name(song_dir.name)
+                        
                         song_data = {
                             'id': song_dir.name,
                             'name': song_dir.name.replace('_', ' ').title(),
+                            'country': country_name,
                             'stems': song_stems,
                             'bpm': bpm,
                             'sections': sections
@@ -139,7 +198,7 @@ class SmartSuperColliderStemMixer:
                         
                         section_labels = list(set(s['label'] for s in sections)) if sections else []
                         structure_status = "✅" if structure else "❌"
-                        print(f"📋 Found: {song_data['name']} (BPM: {bpm}, Structure: {structure_status}, Sections: {len(section_labels)})")
+                        print(f"📋 Found: {song_data['name']} | Country: {country_name.title()} | BPM: {bpm} | Structure: {structure_status} | Sections: {len(section_labels)}")
         
         print(f"✅ Total songs indexed: {len(self.available_songs)}")
     
@@ -207,10 +266,12 @@ class SmartSuperColliderStemMixer:
         except Exception as e:
             print(f"❌ Failed to start OSC server: {e}")
     
-    def _smart_load_stem(self, song_index: int, stem_type: str, section: str = None) -> Optional[int]:
+    def _smart_load_stem(self, song_identifier: str, stem_type: str, section: str = None) -> Optional[int]:
         """Smart load: only load stem if not already loaded"""
-        if not (0 <= song_index < len(self.available_songs)):
-            print(f"❌ Invalid song index: {song_index}")
+        song_index = self._find_song_by_identifier(song_identifier)
+        if song_index is None:
+            print(f"❌ Song not found: '{song_identifier}'")
+            print(f"💡 Try a country name (albania, croatia) or song number (0, 1, 2...)")
             return None
             
         song = self.available_songs[song_index]
@@ -336,7 +397,7 @@ class SmartSuperColliderStemMixer:
         except Exception as e:
             print(f"❌ Error executing play command for buffer {buffer_id}: {e}")
     
-    def _load_individual_stem(self, deck: str, song_index: int, stem_type: str, section: str = None):
+    def _load_individual_stem(self, deck: str, song_identifier: str, stem_type: str, section: str = None):
         """Load and play individual stem with smart loading"""
         # Stop existing stem of this type in deck
         deck_stems = self.deck_a_stems if deck == 'A' else self.deck_b_stems
@@ -347,10 +408,11 @@ class SmartSuperColliderStemMixer:
             del deck_stems[stem_type]
         
         # Smart load new stem
-        buffer_id = self._smart_load_stem(song_index, stem_type, section)
+        buffer_id = self._smart_load_stem(song_identifier, stem_type, section)
         if buffer_id is None:
             return False
         
+        song_index = self._find_song_by_identifier(song_identifier)
         song = self.available_songs[song_index]
         
         # Store deck configuration
@@ -365,15 +427,16 @@ class SmartSuperColliderStemMixer:
         
         return True
     
-    def _load_individual_sample(self, deck: str, song_index: int, stem_type: str, section: str = None):
+    def _load_individual_sample(self, deck: str, song_identifier: str, stem_type: str, section: str = None):
         """Load and play individual sample instantly (no sync, no loop)"""
         # Don't stop existing stems for samples - they're additive
         
         # Smart load new sample  
-        buffer_id = self._smart_load_stem(song_index, stem_type, section)
+        buffer_id = self._smart_load_stem(song_identifier, stem_type, section)
         if buffer_id is None:
             return False
         
+        song_index = self._find_song_by_identifier(song_identifier)
         song = self.available_songs[song_index]
         
         # Play instantly without sync or looping (for samples/effects)
@@ -382,7 +445,7 @@ class SmartSuperColliderStemMixer:
         print(f"🎯 Sample fired: {stem_type} from {song['name']}")
         return True
     
-    def _play_instant_stem(self, deck: str, song_index: int, stem_type: str, section: str = None):
+    def _play_instant_stem(self, deck: str, song_identifier: str, stem_type: str, section: str = None):
         """Play stem instantly without quantization (for manual timing)"""
         # Stop existing stem of this type in deck
         deck_stems = self.deck_a_stems if deck == 'A' else self.deck_b_stems
@@ -393,10 +456,11 @@ class SmartSuperColliderStemMixer:
             del deck_stems[stem_type]
         
         # Smart load new stem
-        buffer_id = self._smart_load_stem(song_index, stem_type, section)
+        buffer_id = self._smart_load_stem(song_identifier, stem_type, section)
         if buffer_id is None:
             return False
         
+        song_index = self._find_song_by_identifier(song_identifier)
         song = self.available_songs[song_index]
         
         # Store deck configuration
@@ -561,16 +625,16 @@ class SmartSuperColliderStemMixer:
         print("  quit                  - Exit")
         print()
         print("=== SMART STEM LOADING (Beat-Quantized) ===")
-        print("  a.<stem> <song>       - Load stem to deck A (quantized)")
-        print("  b.<stem> <song>       - Load stem to deck B (quantized)")
-        print("  a.<stem>.<section> <song> - Load stem + section to deck A")
-        print("  b.<stem>.<section> <song> - Load stem + section to deck B")
-        print("  Examples: a.bass 2, b.vocals.chorus 5")
+        print("  a.<stem> <country/id> - Load stem to deck A (quantized)")
+        print("  b.<stem> <country/id> - Load stem to deck B (quantized)")
+        print("  a.<stem>.<section> <country/id> - Load stem + section to deck A")
+        print("  b.<stem>.<section> <country/id> - Load stem + section to deck B")
+        print("  Examples: a.bass albania, b.vocals.chorus croatia, a.drums 2")
         print()
         print("=== INSTANT PLAYBACK ===")
-        print("  instant.<stem> <song> - Play stem instantly (no quantization)")
-        print("  sample.<stem> <song>  - Fire one-shot sample (no loop, instant)")
-        print("  Examples: instant.bass 3, sample.vocals 1")
+        print("  instant.<stem> <country/id> - Play stem instantly (no quantization)")
+        print("  sample.<stem> <country/id>  - Fire one-shot sample (no loop, instant)")
+        print("  Examples: instant.bass denmark, sample.vocals albania, instant.drums 1")
         print()
         print("=== SYNC CONTROLS ===")
         print("  sync on/off           - Enable/disable beat quantization")
@@ -582,7 +646,8 @@ class SmartSuperColliderStemMixer:
         print()
         print("=== OTHER ===")
         print("  random                - Random smart mix")
-        print("  sections <song>       - Show sections for song")
+        print("  sections <country/id> - Show sections for song")
+        print("  Examples: sections albania, sections 0")
         print()
         
         while self.running:
@@ -623,22 +688,23 @@ class SmartSuperColliderStemMixer:
                     print(f"\\n🎵 Available Songs ({len(self.available_songs)}):")
                     for i, song in enumerate(self.available_songs):
                         sections = len(song['sections'])
-                        print(f"  {i}: {song['name']} (BPM: {song['bpm']:.0f}, {sections} sections)")
+                        country = song.get('country', 'unknown').title()
+                        print(f"  {i}: {song['name']} | Country: {country} | BPM: {song['bpm']:.0f} | Sections: {sections}")
                     print()
+                    print("💡 Use country names or numbers: 'a.bass albania' or 'a.bass 0'")
                     
                 elif command == "sections" and len(parts) == 2:
-                    try:
-                        song_idx = int(parts[1])
-                        if 0 <= song_idx < len(self.available_songs):
-                            song = self.available_songs[song_idx]
-                            print(f"\\n📊 Sections for {song['name']}:")
-                            for section in song['sections']:
-                                print(f"  {section['label']}: {section['start']:.1f}s - {section['end']:.1f}s")
-                            print()
-                        else:
-                            print("❌ Invalid song number")
-                    except ValueError:
-                        print("❌ Invalid song number")
+                    song_idx = self._find_song_by_identifier(parts[1])
+                    if song_idx is not None:
+                        song = self.available_songs[song_idx]
+                        country = song.get('country', 'unknown').title()
+                        print(f"\\n📊 Sections for {song['name']} ({country}):")
+                        for section in song['sections']:
+                            print(f"  {section['label']}: {section['start']:.1f}s - {section['end']:.1f}s")
+                        print()
+                    else:
+                        print(f"❌ Song not found: '{parts[1]}'")
+                        print("💡 Try a country name (albania, croatia) or song number (0, 1, 2...)")
                 
                 elif command == "sync" and len(parts) == 2:
                     # Sync control commands
@@ -672,40 +738,31 @@ class SmartSuperColliderStemMixer:
                 
                 elif command.startswith("instant.") and len(parts) == 2:
                     # Instant playback commands
-                    try:
-                        stem_type = command.split(".", 1)[1]
-                        song_id = int(parts[1])
-                        # Default to deck A for instant commands
-                        self._play_instant_stem('A', song_id, stem_type)
-                    except ValueError:
-                        print("❌ Invalid command format")
+                    stem_type = command.split(".", 1)[1]
+                    song_identifier = parts[1]
+                    # Default to deck A for instant commands
+                    self._play_instant_stem('A', song_identifier, stem_type)
                 
                 elif command.startswith("sample.") and len(parts) == 2:
                     # Sample (one-shot) commands
-                    try:
-                        stem_type = command.split(".", 1)[1]
-                        song_id = int(parts[1])
-                        # Default to deck A for sample commands
-                        self._load_individual_sample('A', song_id, stem_type)
-                    except ValueError:
-                        print("❌ Invalid command format")
+                    stem_type = command.split(".", 1)[1]
+                    song_identifier = parts[1]
+                    # Default to deck A for sample commands
+                    self._load_individual_sample('A', song_identifier, stem_type)
                 
                 elif "." in command and len(parts) == 2:
                     # Smart stem loading
-                    try:
-                        deck_parts = command.split(".")
-                        song_id = int(parts[1])
-                        
-                        if len(deck_parts) == 2:
-                            # Format: a.bass 2
-                            deck, stem = deck_parts
-                            self._load_individual_stem(deck.upper(), song_id, stem)
-                        elif len(deck_parts) == 3:
-                            # Format: a.bass.chorus 2
-                            deck, stem, section = deck_parts
-                            self._load_individual_stem(deck.upper(), song_id, stem, section)
-                    except ValueError:
-                        print("❌ Invalid command")
+                    deck_parts = command.split(".")
+                    song_identifier = parts[1]
+                    
+                    if len(deck_parts) == 2:
+                        # Format: a.bass albania (or a.bass 2)
+                        deck, stem = deck_parts
+                        self._load_individual_stem(deck.upper(), song_identifier, stem)
+                    elif len(deck_parts) == 3:
+                        # Format: a.bass.chorus albania (or a.bass.chorus 2)  
+                        deck, stem, section = deck_parts
+                        self._load_individual_stem(deck.upper(), song_identifier, stem, section)
                         
                 elif command in self.stem_volumes and len(parts) == 2:
                     try:

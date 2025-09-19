@@ -153,16 +153,25 @@ find drums 130                # Find drums around 130 BPM
 ./start_python_mixer.sh
 ```
 
-**Live Mixing Commands:**
+**🌍 Live Mixing Commands with Country Names:**
 ```bash
-🎛️🧠 > songs                    # List available songs
-🎛️🧠 > a.bass 2                # Load bass from song 2 to deck A
-🎛️🧠 > b.vocals.chorus 5       # Load vocals from chorus of song 5 to deck B
+🎛️🧠 > songs                    # List all Eurovision countries and songs
+🎛️🧠 > a.bass albania          # Load Albanian bass to deck A
+🎛️🧠 > b.vocals.chorus croatia # Load Croatian vocals (chorus) to deck B  
+🎛️🧠 > instant.drums denmark   # Play Danish drums instantly
+🎛️🧠 > sample.piano estonia    # Fire Estonian piano sample
+🎛️🧠 > sections cyprus         # Show sections in Cyprus song
 🎛️🧠 > bpm 128                 # Set BPM to 128
 🎛️🧠 > cross 0.5               # 50/50 crossfade between decks
 🎛️🧠 > bass 0.8                # Set bass volume to 80%
 🎛️🧠 > random                  # Generate random creative mix
 ```
+
+**💡 Country Name Support:**
+- **Use intuitive country names**: `albania`, `croatia`, `denmark`, `estonia`, etc.
+- **Or traditional numbers**: `0`, `1`, `2` for backward compatibility
+- **Partial matching works**: `alb` matches `albania`, `cro` matches `croatia`
+- **Case insensitive**: `ALBANIA`, `Albania`, `albania` all work
 
 ### 🎯 **TSP Song Optimization (Standalone)**
 ```bash

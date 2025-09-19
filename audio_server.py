@@ -122,8 +122,8 @@ class PythonAudioServer:
         self.active_players: Dict[int, StemPlayer] = {}
         
         # Mixing parameters
-        self.deck_a_volume = 0.8
-        self.deck_b_volume = 0.0
+        self.deck_a_volume = 1.0
+        self.deck_b_volume = 1.0
         self.master_volume = 0.8
         
         # PyAudio setup
@@ -229,14 +229,24 @@ class PythonAudioServer:
         # Cleanup
         disp.map("/mixer_cleanup", self.osc_mixer_cleanup)
         
-        # Start OSC server
-        self.osc_server = ThreadingOSCUDPServer(
-            ("localhost", self.osc_port), disp)
+        # Start OSC server - try IPv6 first, then IPv4
+        self.osc_server = None
+        for bind_addr in ["::", "0.0.0.0"]:  # IPv6 first, then IPv4
+            try:
+                print(f"🔌 Trying OSC server on {bind_addr}:{self.osc_port}")
+                self.osc_server = ThreadingOSCUDPServer(
+                    (bind_addr, self.osc_port), disp)
+                print(f"✅ OSC server created on {bind_addr}:{self.osc_port}")
+                break
+            except Exception as e:
+                print(f"❌ Failed to bind to {bind_addr}: {e}")
         
-        print(f"🔌 OSC server listening on port {self.osc_port}")
+        if not self.osc_server:
+            print("❌ Could not create OSC server on any interface")
     
     def osc_load_buffer(self, address, *args):
         """Load audio buffer - /load_buffer [buffer_id, file_path, stem_name]"""
+        print(f"📡 OSC RECEIVED: {address} {args}")
         try:
             buffer_id = int(args[0])
             file_path = str(args[1])
@@ -356,16 +366,22 @@ class PythonAudioServer:
         if self.stream and self.osc_server:
             self.stream.start_stream()
             
+            # Start OSC server FIRST
+            print(f"🔌 Starting OSC server thread...")
+            server_thread = threading.Thread(target=self.osc_server.serve_forever)
+            server_thread.daemon = True
+            server_thread.start()
+            
+            # Give OSC server time to bind to port
+            print(f"⏳ Waiting for OSC server to bind...")
+            time.sleep(0.5)
+            print(f"✅ OSC server should be ready")
+            
             print("🎛️💾 PYTHON AUDIO SERVER READY 💾🎛️")
             print(f"🔊 Audio: {self.sample_rate}Hz, {self.chunk_size} samples")
             print(f"🔌 OSC: localhost:{self.osc_port}")
             print("💡 Same OSC API as SuperCollider server")
             print()
-            
-            # Start OSC server
-            server_thread = threading.Thread(target=self.osc_server.serve_forever)
-            server_thread.daemon = True
-            server_thread.start()
             
             return server_thread
         else:
